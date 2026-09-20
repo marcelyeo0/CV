@@ -259,7 +259,7 @@ ATS_DATA = {
         ],
     },
     "Data_Science_IA": {
-        "tagline": "Recherche d'un stage de 4-6 mois en Data Science / Ingénieur IA à partir de mars 2027",
+        "tagline": "Recherche d'un stage de 4-6 mois en Data Science / AI Engineer à partir de mars 2027",
         "competences": [
             ("Langages", "Python, SQL, Java, C, C++"),
             ("Machine Learning", "Scikit-Learn, apprentissage supervisé, Reinforcement Learning, évaluation de modèles"),
