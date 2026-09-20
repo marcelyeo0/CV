@@ -95,43 +95,40 @@ DATA_ANALYST = {
             "titre": "Automatisation de Pipeline de Données & Reporting (n8n)",
             "dates": "Juillet 2026",
             "texte": (
-                "Conception d'un pipeline ETL end-to-end orchestré sous n8n (self-hosted) : ingestion de données "
-                "via API, normalisation, déduplication et persistance structurée (Google Sheets API), puis scoring "
-                "automatisé de pertinence. Intégration d'une API LLM (Gemini) pour l'enrichissement sémantique des "
-                "données, avec logs d'audit, gestion d'erreurs et reporting automatisé des indicateurs de suivi."
+                "Pipeline ETL end-to-end sous n8n (self-hosted) : ingestion via API, normalisation, "
+                "déduplication et persistance structurée (Google Sheets API), puis scoring automatisé de "
+                "pertinence. Enrichissement sémantique via LLM (Gemini), logs d'audit et reporting "
+                "automatisé des indicateurs de suivi."
             ),
         },
         {
             "titre": "Segmentation par ACP & Prévision de Distribution",
             "dates": "Février 2026 - Avril 2026",
             "texte": (
-                "Pipeline Python/SQL d'analyse d'assortiment produit : nettoyage et agrégation de données de "
-                "ventes, réduction dimensionnelle par Analyse en Composantes Principales et classification "
-                "ascendante hiérarchique pour identifier les typologies de points de vente. Interprétation des axes "
-                "factoriels, modèle de forecasting à 3 mois et tableau de bord Streamlit mesurant l'écart entre "
-                "assortiment théorique et distribution effective."
+                "Pipeline Python/SQL d'analyse d'assortiment produit : nettoyage et agrégation des ventes, "
+                "réduction dimensionnelle par ACP et classification ascendante hiérarchique pour "
+                "identifier les typologies de points de vente. Modèle de forecasting à 3 mois et tableau "
+                "de bord Streamlit mesurant l'écart entre assortiment théorique et distribution effective."
             ),
         },
         {
             "titre": "Backtesting Quantitatif – Validation Statistique de Stratégies",
             "dates": "Août 2025 - Décembre 2025",
             "texte": (
-                "Conception d'un framework d'analyse de séries temporelles financières (Pandas, NumPy, "
-                "Backtrader) : ingestion et nettoyage de données de marché, implémentation de stratégies "
-                "momentum et mean-reversion, optimisation des hyperparamètres et validation out-of-sample par "
-                "walk-forward. Évaluation de la robustesse via métriques de risque (ratio de Sharpe, drawdown "
-                "maximum) et tests de significativité des résultats."
+                "Framework d'analyse de séries temporelles financières (Pandas, NumPy, Backtrader) : "
+                "ingestion de données de marché, stratégies momentum et mean-reversion, optimisation des "
+                "hyperparamètres et validation out-of-sample par walk-forward. Évaluation de la robustesse "
+                "via métriques de risque (Sharpe, drawdown) et tests de significativité."
             ),
         },
         {
             "titre": "Pipeline RAG – Contrôle de Conformité Documentaire",
             "dates": "Mai 2025 - Juillet 2025",
             "texte": (
-                "Développement d'un pipeline RAG (Retrieval-Augmented Generation) en Python pour le contrôle "
-                "automatisé de documents réglementaires : structuration de corpus hétérogènes, indexation "
-                "vectorielle sous PostgreSQL/pgvector et inférence via LLM. Détection d'anomalies de calcul avec "
-                "justification par extraits sourcés pour garantir la traçabilité, et restitution des résultats via "
-                "une API REST (FastAPI)."
+                "Pipeline RAG en Python pour le contrôle automatisé de documents réglementaires : "
+                "structuration de corpus hétérogènes, indexation vectorielle (PostgreSQL/pgvector) et "
+                "inférence LLM. Détection d'anomalies avec justification par extraits sourcés pour "
+                "garantir la traçabilité, résultats exposés via API REST (FastAPI)."
             ),
         },
     ],
@@ -163,44 +160,40 @@ DATA_SCIENCE_IA = {
             "titre": "Agent IA Connecté – Protocole MCP (Model Context Protocol)",
             "dates": "Août 2026 - En cours",
             "texte": (
-                "Conception d'un agent conversationnel en Python (LangChain) connecté à des sources de données "
-                "hétérogènes via le protocole MCP : bases relationnelles SQL et outils SaaS (CRM, support). "
-                "Traduction de requêtes en langage naturel en appels d'outils structurés, orchestration multi-étapes "
-                "avec gestion des erreurs et génération automatisée de rapports d'insights. Développement d'un "
-                "serveur MCP exposant les schémas de données et les permissions d'accès."
+                "Agent conversationnel Python (LangChain) connecté via le protocole MCP à des sources "
+                "hétérogènes (SQL, SaaS CRM/support). Traduction du langage naturel en appels d'outils "
+                "structurés et génération automatisée de rapports d'insights. Développement d'un serveur "
+                "MCP exposant schémas de données et permissions d'accès."
             ),
         },
         {
             "titre": "Automatisation Intelligente de Candidatures (n8n)",
             "dates": "Juillet 2026",
             "texte": (
-                "Conception d'un pipeline d'automatisation end-to-end orchestré sous n8n (self-hosted, Docker) : "
-                "ingestion d'offres via API de scraping (Apify), normalisation et persistance des données (Google "
-                "Sheets API), scoring de pertinence, puis génération de contenus personnalisés par intégration "
-                "d'une API LLM (Gemini Flash-Lite) avec prompt engineering et sorties structurées. Intégration "
-                "Gmail API, logs d'audit et gestion d'erreurs."
+                "Pipeline d'automatisation end-to-end sous n8n (self-hosted, Docker) : ingestion d'offres "
+                "(API Apify), normalisation et persistance (Google Sheets API), scoring de pertinence puis "
+                "génération de contenus personnalisés via LLM (Gemini Flash-Lite, prompt engineering). "
+                "Intégration Gmail API, logs d'audit et gestion d'erreurs."
             ),
         },
         {
             "titre": "Bike Fit – Solution IA d'Analyse Posturale par Computer Vision",
             "dates": "Juin 2026 - En cours",
             "texte": (
-                "Développement d'un logiciel Python à architecture modulaire : pipeline de traitement d'image et "
-                "d'inférence de pose (MediaPipe, OpenCV), extraction de landmarks corporels et calcul d'angles "
-                "articulaires, couche d'intégration API LLM (Gemini) pour la génération de recommandations "
-                "structurées et de rapports PDF. Interface desktop CustomTkinter. Produit en phase de test auprès "
-                "de vélocistes professionnels, avec cas d'usage B2B identifié."
+                "Logiciel Python modulaire : pipeline de traitement d'image et d'inférence de pose "
+                "(MediaPipe, OpenCV), extraction de landmarks et calcul d'angles articulaires, génération "
+                "de recommandations via API LLM (Gemini) et rapports PDF. Interface desktop CustomTkinter. "
+                "En test auprès de vélocistes professionnels, cas d'usage B2B identifié."
             ),
         },
         {
             "titre": "Pipeline RAG – Contrôle de Conformité Réglementaire",
             "dates": "Mai 2025 - Juillet 2025",
             "texte": (
-                "Développement d'un pipeline RAG (Retrieval-Augmented Generation) en Python pour l'analyse "
-                "automatisée de documents réglementaires : chunking sémantique, indexation vectorielle sous "
-                "PostgreSQL/pgvector et inférence via LLM. Détection d'anomalies de calcul avec justification "
-                "systématique par extraits sourcés afin de garantir la traçabilité des décisions. Exposition des "
-                "résultats via une API REST (FastAPI) et évaluation de la pertinence du retrieval."
+                "Pipeline RAG en Python pour l'analyse automatisée de documents réglementaires : chunking "
+                "sémantique, indexation vectorielle (PostgreSQL/pgvector) et inférence LLM. Détection "
+                "d'anomalies avec justification par extraits sourcés pour garantir la traçabilité. "
+                "Résultats exposés via API REST (FastAPI), évaluation de la pertinence du retrieval."
             ),
         },
     ],
@@ -222,7 +215,7 @@ ADRESSE_ATS = "Clermont-Ferrand 63"
 
 ATS_DATA = {
     "Data_Analyst": {
-        "tagline": "Recherche d'un stage de 4-6 mois en Data Analyse / Études statistiques à partir de mars 2027",
+        "tagline": "Recherche d'un stage de 4-6 mois en Data Analyst à partir de mars 2027",
         "competences": [
             ("Langages & requêtage", "Python, SQL (PostgreSQL), Java, C, C++"),
             ("Statistiques", "statistiques inférentielles, tests d'hypothèses, ACP, clustering (k-means, CAH), régression"),
@@ -234,12 +227,18 @@ ATS_DATA = {
         ],
         "projets_majeurs": [
             {
-                "titre": "Automatisation de Pipeline de Données & Reporting (n8n)",
-                "dates": "Juillet 2026",
+                "titre": "Bike Fit – Analyse Posturale par Computer Vision (Freelance)",
+                "dates": "Juin 2026 - En cours",
                 "bullets": [
-                    "Conception d'un pipeline ETL end-to-end orchestré sous n8n (self-hosted) : ingestion de données via API, normalisation, déduplication et persistance structurée (Google Sheets API), puis scoring automatisé de pertinence.",
-                    "Intégration d'une API LLM (Gemini) pour l'enrichissement sémantique des données, avec logs d'audit, gestion d'erreurs et reporting automatisé des indicateurs de suivi.",
-                ],
+                    "Logiciel Python modulaire : pipeline de pose (MediaPipe, OpenCV), extraction de landmarks et calcul d'angles articulaires, recommandations via LLM (Gemini) et rapports PDF.",
+                    "En test auprès de vélocistes professionnels.",
+                ],     
+                # "titre": "Automatisation de Pipeline de Données & Reporting (n8n)",
+                # "dates": "Juillet 2026",
+                # "bullets": [
+                #     "Conception d'un pipeline ETL end-to-end orchestré sous n8n (self-hosted) : ingestion de données via API, normalisation, déduplication et persistance structurée (Google Sheets API), puis scoring automatisé de pertinence.",
+                #     "Intégration d'une API LLM (Gemini) pour l'enrichissement sémantique des données, avec logs d'audit, gestion d'erreurs et reporting automatisé des indicateurs de suivi.",
+                # ],
             },
             {
                 "titre": "Segmentation par ACP & Prévision de Distribution",
@@ -260,7 +259,7 @@ ATS_DATA = {
         ],
     },
     "Data_Science_IA": {
-        "tagline": "Recherche d'un stage de 4-6 mois en Data Science / Intelligence Artificielle à partir de mars 2027",
+        "tagline": "Recherche d'un stage de 4-6 mois en Data Science / Ingénieur IA à partir de mars 2027",
         "competences": [
             ("Langages", "Python, SQL, Java, C, C++"),
             ("Machine Learning", "Scikit-Learn, apprentissage supervisé, Reinforcement Learning, évaluation de modèles"),
@@ -272,29 +271,30 @@ ATS_DATA = {
         ],
         "projets_majeurs": [
             {
-                "titre": "Agent IA Connecté – Protocole MCP (Model Context Protocol)",
+                "titre": "Agent IA Connecté – Protocole MCP ",
                 "dates": "Août 2026 - En cours",
                 "bullets": [
-                    "Conception d'un agent conversationnel en Python (LangChain) connecté à des sources de données hétérogènes via le protocole MCP : bases relationnelles SQL et outils SaaS (CRM, support).",
-                    "Traduction de requêtes en langage naturel en appels d'outils structurés, orchestration multi-étapes avec gestion des erreurs et génération automatisée de rapports d'insights.",
-                    "Développement d'un serveur MCP exposant les schémas de données et les permissions d'accès.",
+                    "Agent conversationnel Python connecté via le protocole MCP à des sources hétérogènes (SaaS).",
+                    "Traduction du langage naturel en appels d'outils structurés et génération automatisée de rapports d'insights.",
+                    "Développement d'un serveur MCP exposant schémas de données et permissions d'accès.",
                 ],
             },
             {
                 "titre": "Automatisation Intelligente de Candidatures (n8n)",
                 "dates": "Juillet 2026",
                 "bullets": [
-                    "Conception d'un pipeline d'automatisation end-to-end orchestré sous n8n (self-hosted, Docker) : ingestion d'offres via API de scraping (Apify), normalisation et persistance des données (Google Sheets API), scoring de pertinence, puis génération de contenus personnalisés par intégration d'une API LLM (Gemini Flash-Lite) avec prompt engineering et sorties structurées.",
-                    "Intégration Gmail API, logs d'audit et gestion d'erreurs.",
+                    "Pipeline d'automatisation sous n8n (self-hosted) : ingestion d'offres (via API), normalisation, stockage et scoring de pertinence.",
+                    "Génération de contenus personnalisés via LLM ; intégration Gmail API, logs d'audit et gestion d'erreurs.",
                 ],
             },
             {
-                "titre": "Bike Fit – Solution IA d'Analyse Posturale par Computer Vision",
+                "titre": "Bike Fit – Analyse Posturale par Computer Vision (Freelance)",
                 "dates": "Juin 2026 - En cours",
                 "bullets": [
-                    "Développement d'un logiciel Python à architecture modulaire : pipeline de traitement d'image et d'inférence de pose (MediaPipe, OpenCV), extraction de landmarks corporels et calcul d'angles articulaires, couche d'intégration API LLM (Gemini) pour la génération de recommandations structurées et de rapports PDF ; interface desktop CustomTkinter.",
-                    "Produit en phase de test auprès de vélocistes professionnels, avec cas d'usage B2B identifié.",
+                    "Logiciel Python modulaire : pipeline de pose (MediaPipe, OpenCV), extraction de landmarks et calcul d'angles articulaires, recommandations via LLM (Gemini) et rapports PDF.",
+                    "En test auprès de vélocistes professionnels.",
                 ],
+
             },
         ],
     },
