@@ -87,7 +87,7 @@ DATA_ANALYST = {
         ("Machine Learning", "Scikit-Learn, modélisation prédictive, séries temporelles, validation croisée"),
         ("Analyse de données", "Pandas, NumPy, nettoyage et structuration, ETL, données hétérogènes"),
         ("Dataviz & Reporting", "Streamlit, Matplotlib, tableaux de bord, suivi de KPI, Excel"),
-        ("Cloud & Déploiement", "Google Cloud Platform (APIs Gemini, Sheets, Gmail), Docker, déploiement self-hosted, gestion d'authentification et de quotas API"),
+        ("Cloud & Déploiement", "Google Cloud Platform (APIs Gemini, Sheets, Gmail), Docker, déploiement self-hosted"),
         ("Outils", "Git, Linux, n8n, Jupyter, Excel"),
     ],
     "projets_personnels": [
@@ -244,16 +244,16 @@ ATS_DATA = {
                 "titre": "Segmentation par ACP & Prévision de Distribution",
                 "dates": "Février 2026 - Avril 2026",
                 "bullets": [
-                    "Pipeline Python/SQL d'analyse d'assortiment produit : nettoyage et agrégation de données de ventes, réduction dimensionnelle par Analyse en Composantes Principales et classification ascendante hiérarchique pour identifier les typologies de points de vente.",
-                    "Interprétation des axes factoriels, modèle de forecasting à 3 mois et tableau de bord Power BI mesurant l'écart entre assortiment théorique et distribution effective.",
+                    "Pipeline Python/SQL d'analyse produit : traitement des ventes, réduction dimensionnelle (ACP) et clustering hiérarchique (CAH) pour segmenter les points de vente.",
+                    "Modélisation de prévisions à 3 mois et création d'un dashboard Power BI mesurant l'écart assortiment théorique vs distribution réelle."
                 ],
             },
             {
                 "titre": "Backtesting Quantitatif – Validation Statistique de Stratégies",
                 "dates": "Août 2025 - Décembre 2025",
                 "bullets": [
-                    "Conception d'un framework d'analyse de séries temporelles financières (Pandas, NumPy, Backtrader) : ingestion et nettoyage de données de marché, implémentation de stratégies momentum et mean-reversion, optimisation des hyperparamètres et validation out-of-sample par walk-forward.",
-                    "Évaluation de la robustesse via métriques de risque (ratio de Sharpe, drawdown maximum) et tests de significativité des résultats.",
+                    "Création d'un framework de backtesting (Pandas, NumPy, Backtrader) : traitement des données, stratégies momentum/mean-reversion, et validation walk-forward.",
+                    "Évaluation de la robustesse et des risques (ratio de Sharpe, max drawdown) via tests statistiques."
                 ],
             },
         ],
