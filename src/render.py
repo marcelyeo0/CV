@@ -70,6 +70,7 @@ def _header_html(name_html, adresse=None):
     <div class="header">
       <div class="name">{name_html}</div>
       <div class="contact-row">
+        <span>{CONTACT['nom']}</span><span class="sep">|</span>
         <span>{CONTACT['email']}</span><span class="sep">|</span>
         <span>{CONTACT['tel']}</span><span class="sep">|</span>
         <span>{adresse}</span>
@@ -289,7 +290,7 @@ if __name__ == "__main__":
         ats_html = render_ats(key)
 
         design_path = f"{out_dir}/CV_Marcel_Yeo_{key}.pdf"
-        ats_path = f"{out_dir}/CV_Marcel_Yeo_{key}_ATS.pdf"
+        ats_path = f"{out_dir}/CV_Marcel_Yeo_{key}_.pdf"
 
         HTML(string=design_html).write_pdf(design_path)
         HTML(string=ats_html).write_pdf(ats_path)

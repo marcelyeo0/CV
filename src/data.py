@@ -2,9 +2,9 @@
 """Contenu structuré des deux variantes de CV de Marcel Yeo."""
 
 CONTACT = {
-    "nom": "MARCEL YEO",
+    "nom": "Marcel YEO",
     "email": "marcelyeo30@gmail.com",
-    "tel": "+33 7 58 02 29 81",
+    "tel": "+33 (0)7 58 02 29 81",
     "adresse": "34 Boulevard Pochet Lagaye, 63000 Clermont-Ferrand",
 }
 
@@ -82,7 +82,7 @@ DATA_ANALYST = {
         "Python, SQL et des outils de dataviz, avec une forte appétence pour les enjeux business et financiers."
     ),
     "competences": [
-        ("Langages & requêtage", "Python, SQL (PostgreSQL), C, C++"),
+        ("Langages & requêtage", "Python, SQL (PostgreSQL),Java, JavaScript (React, Next.js), C, C++"),
         ("Statistiques", "statistiques inférentielles, tests d'hypothèses, ACP, clustering (k-means, CAH), régression"),
         ("Machine Learning", "Scikit-Learn, modélisation prédictive, séries temporelles, validation croisée"),
         ("Analyse de données", "Pandas, NumPy, nettoyage et structuration, ETL, données hétérogènes"),
@@ -147,7 +147,7 @@ DATA_SCIENCE_IA = {
         "collaboratif (Git), avec une forte appétence pour la finance quantitative."
     ),
     "competences": [
-        ("Langages", "Python, SQL, C, C++"),
+        ("Langages", "Python, SQL, Java, JavaScript (React, Next.js), C, C++"),
         ("Machine Learning", "Scikit-Learn, apprentissage supervisé, Reinforcement Learning, évaluation de modèles"),
         ("LLM & NLP", "RAG, LangChain, embeddings, bases vectorielles (pgvector, ChromaDB), prompt engineering"),
         ("Computer Vision", "OpenCV, MediaPipe, détection et estimation de pose"),
@@ -217,7 +217,7 @@ ATS_DATA = {
     "Data_Analyst": {
         "tagline": "Recherche d'un stage de 4-6 mois en Data Analyst à partir de mars 2027",
         "competences": [
-            ("Langages & requêtage", "Python, SQL (PostgreSQL), Java, C, C++"),
+            ("Langages & requêtage", "Python, SQL (PostgreSQL), Java, JavaScript (React, Next.js), C, C++"),
             ("Statistiques", "statistiques inférentielles, tests d'hypothèses, ACP, clustering (k-means, CAH), régression"),
             ("Machine Learning", "Scikit-Learn, modélisation prédictive, séries temporelles, validation croisée"),
             ("Analyse de données", "Pandas, NumPy, nettoyage et structuration, ETL, données hétérogènes"),
