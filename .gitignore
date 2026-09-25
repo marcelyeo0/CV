@@ -1,4 +1,12 @@
-output/
+# Environnements
+.venv/
+src/.venv/
 __pycache__/
 *.pyc
-.venv/
+
+# Secrets
+.env
+
+# Sorties générées
+output/
+outputs/
