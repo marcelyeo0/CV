@@ -1,0 +1,91 @@
+{#- CV ATS une colonne. Autoescape actif : tout texte non fiable est échappé. -#}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ contact.nom }} — {{ tagline }}</title>
+  <style>{{ css|safe_markup }}</style>
+</head>
+<body>
+<div class="header">
+  <div class="name">{{ tagline }}</div>
+  <div class="contact-row">
+    <span>{{ contact.nom }}</span><span class="sep">|</span>
+    <span>{{ contact.email }}</span><span class="sep">|</span>
+    <span>{{ contact.tel }}</span><span class="sep">|</span>
+    <span>{{ contact.adresse_courte }}</span>
+  </div>
+</div>
+
+<div class="content">
+
+  <h2 class="section">COMPETENCES</h2>
+  {% for group in skill_groups %}
+  <div><b>{{ group.label }}</b> : {{ group.ligne }}</div>
+  {% endfor %}
+
+  <h2 class="section">FORMATION</h2>
+  {% for f in formation %}
+  <div class="entry">
+    <div class="entry-head">
+      <span class="entry-title"><span class="bullet-dot"></span>{{ f.titre }}</span><span class="entry-sep">|</span><span class="entry-dates">{{ f.dates }}</span>
+    </div>
+    <div class="entry-etab">{{ f.etab }}</div>
+  </div>
+  {% endfor %}
+
+  <h2 class="section">EXPERIENCE</h2>
+  {% for e in experiences %}
+  <div class="entry">
+    <div class="entry-head">
+      <span class="entry-title"><span class="bullet-dot"></span>{{ e.titre }}</span><span class="entry-sep">|</span><span class="entry-dates">{{ e.dates }}</span>
+    </div>
+    <div class="entry-etab">{{ e.etab }}</div>
+    <ul class="bullets">
+      {% for b in e.bullets %}<li>{{ b }}</li>{% endfor %}
+    </ul>
+  </div>
+  {% endfor %}
+
+  <h2 class="section with-link">
+    <span>PROJETS MAJEURS</span>
+    <a class="side-link" href="{{ contact.github_url }}">{{ contact.github_url }}</a>
+  </h2>
+  {% for p in projets %}
+  <div class="entry">
+    <div class="entry-head">
+      <span class="entry-title"><span class="bullet-dot"></span>{{ p.titre }}</span><span class="entry-sep">|</span><span class="entry-dates">{{ p.dates }}</span>
+    </div>
+    <ul class="bullets">
+      {% for b in p.bullets %}<li>{{ b }}</li>{% endfor %}
+    </ul>
+  </div>
+  {% endfor %}
+
+  {% if projet_academique %}
+  <h2 class="section">PROJET ACADEMIQUE</h2>
+  {% for p in projet_academique %}
+  <div class="entry">
+    <div class="entry-head">
+      <span class="entry-title"><span class="bullet-dot"></span>{{ p.titre }}</span><span class="entry-sep">|</span><span class="entry-dates">{{ p.dates }}</span>
+    </div>
+    <div class="entry-text">{{ p.bullets|join(' ') }}</div>
+  </div>
+  {% endfor %}
+  {% endif %}
+
+  <h2 class="section">LANGUES</h2>
+  <div class="inline-list">
+    {%- for l in langues %}{% if not loop.first %}&nbsp;•&nbsp;{% endif %}{{ l }}{% endfor -%}
+  </div>
+
+  {% if centres_interet %}
+  <h2 class="section">CENTRES D'INTERET</h2>
+  <div class="inline-list">
+    {%- for c in centres_interet %}{% if not loop.first %}&nbsp;•&nbsp;{% endif %}{{ c }}{% endfor -%}
+  </div>
+  {% endif %}
+
+</div>
+</body>
+</html>

@@ -1,0 +1,120 @@
+/* Charte commune CV + lettre de motivation.
+   {{ fonts_dir }} est injecté par le moteur de rendu (chemin absolu file://). */
+
+@font-face {
+    font-family: "Latin Modern Roman";
+    src: url("{{ fonts_dir }}/lmroman10-regular.otf") format("opentype");
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: "Latin Modern Roman";
+    src: url("{{ fonts_dir }}/lmroman10-bold.otf") format("opentype");
+    font-weight: bold;
+    font-style: normal;
+}
+@font-face {
+    font-family: "Latin Modern Roman";
+    src: url("{{ fonts_dir }}/lmroman10-italic.otf") format("opentype");
+    font-weight: normal;
+    font-style: italic;
+}
+@font-face {
+    font-family: "Latin Modern Roman";
+    src: url("{{ fonts_dir }}/lmroman10-bolditalic.otf") format("opentype");
+    font-weight: bold;
+    font-style: italic;
+}
+
+@page { size: A4; margin: 0; }
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    /* Latin Modern a une hauteur d'x faible : taille relevée par rapport à Arial. */
+    font-family: "Latin Modern Roman", Georgia, "Times New Roman", serif;
+    font-size: {{ base_px }}px;
+    color: #2b2b2b;
+
+    /* Ligatures désactivées : fi / fl / ffi doivent rester des caractères
+       distincts pour que l'extraction de texte des ATS soit propre. */
+    font-variant-ligatures: none;
+    font-feature-settings: "liga" 0, "clig" 0, "dlig" 0, "hlig" 0;
+
+    /* Aucune césure : évite qu'un trait d'union d'origine (mean-reversion) soit
+       confondu avec une coupure de fin de ligne à l'extraction. */
+    hyphens: none;
+    -webkit-hyphens: none;
+}
+
+.header {
+    background: {{ navy }};
+    color: #ffffff;
+    padding: 20px 30px;
+}
+.header .name {
+    font-size: {{ (base_px * 1.326)|round(2) }}px;
+    font-weight: bold;
+    line-height: 1.35;
+    margin: 0 0 9px 0;
+}
+.contact-row { font-size: {{ (base_px * 0.947)|round(2) }}px; }
+.contact-row .sep { margin: 0 10px; opacity: .6; }
+
+.content { padding: 14px 30px 14px 30px; }
+
+h2.section {
+    color: {{ navy }};
+    font-size: {{ (base_px * 1.174)|round(2) }}px;
+    font-weight: bold;
+    border-bottom: 1.5px solid {{ navy }};
+    padding-bottom: 4px;
+    margin: 10px 0 6px 0;
+}
+h2.section.with-link {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+h2.section.with-link .side-link {
+    font-size: {{ (base_px * 0.909)|round(2) }}px;
+    font-weight: normal;
+    color: {{ navy }};
+    text-decoration: none;
+}
+
+.entry { margin-bottom: 6px; }
+
+/* Dates dans le flux de texte, juste après le titre.
+   Ni float ni colonne alignée à droite : les deux font détecter une colonne
+   séparée aux extracteurs (pdftotext, parseurs ATS), qui regroupent alors
+   toutes les dates en fin de section au lieu de les garder avec leur entrée. */
+.entry-head { line-height: 1.3; }
+.entry-title { font-weight: bold; }
+.entry-dates {
+    font-size: {{ (base_px * 0.909)|round(2) }}px;
+    color: #444;
+    white-space: nowrap;
+}
+.entry-sep { color: #888; margin: 0 5px; }
+.entry-etab {
+    font-style: italic;
+    font-size: {{ (base_px * 0.924)|round(2) }}px;
+    color: #444;
+    margin: 1px 0 2px 15px;
+}
+.entry-text { text-align: justify; line-height: 1.35; margin-left: 15px; }
+
+.bullet-dot {
+    display: inline-block;
+    width: 6px; height: 6px;
+    border: 1.4px solid {{ navy }};
+    border-radius: 50%;
+    margin-right: 8px;
+}
+
+ul.bullets { margin: 3px 0 0 15px; padding-left: 15px; line-height: 1.35; }
+ul.bullets li { margin-bottom: 2px; }
+
+.inline-list { line-height: 1.45; }
