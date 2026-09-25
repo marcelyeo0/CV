@@ -118,3 +118,20 @@ ul.bullets { margin: 3px 0 0 15px; padding-left: 15px; line-height: 1.35; }
 ul.bullets li { margin-bottom: 2px; }
 
 .inline-list { line-height: 1.45; }
+
+/* ----- Lettre de motivation : même police, même charte ----- */
+.letter { padding: 34px 40px 30px 40px; line-height: 1.5; }
+.letter-head { margin-bottom: 22px; }
+.letter-from { margin-bottom: 18px; }
+.letter-from div:first-child { font-weight: bold; }
+.letter-to { color: #2b2b2b; }
+.letter-to div:first-child { font-weight: bold; }
+.letter-date { margin-bottom: 18px; }
+.letter-objet {
+    color: {{ navy }};
+    border-bottom: 1.5px solid {{ navy }};
+    padding-bottom: 4px;
+    margin-bottom: 16px;
+}
+.letter-body p { text-align: justify; margin: 0 0 10px 0; }
+.letter-signature { margin-top: 18px; font-weight: bold; }

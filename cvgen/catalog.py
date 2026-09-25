@@ -126,7 +126,7 @@ def tech_whitelist(catalog: Catalog) -> set[str]:
     """Tous les tokens techno-formés présents quelque part dans le catalogue."""
     allowed: set[str] = set()
     for text in _catalog_texts(catalog):
-        allowed |= tech_tokens(text)
+        allowed |= tech_tokens(text, any_position=True)
     # Les tags sont des identifiants (kebab-case) : on autorise aussi leurs segments.
     for competence in catalog.competences:
         for tag in competence.tags:

@@ -1,0 +1,39 @@
+{#- Lettre de motivation. Autoescape actif : le texte vient du LLM et de l'offre. -#}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ contact.nom }} — lettre de motivation</title>
+  <style>{{ css|safe_markup }}</style>
+</head>
+<body>
+<div class="letter">
+
+  <div class="letter-head">
+    <div class="letter-from">
+      {% for ligne in expediteur %}
+      <div>{{ ligne }}</div>
+      {% endfor %}
+    </div>
+    <div class="letter-to">
+      {% for ligne in destinataire %}
+      <div>{{ ligne }}</div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="letter-date">{{ ville_expedition }}, le {{ date }}</div>
+
+  <div class="letter-objet"><b>Objet : candidature — {{ poste }}</b></div>
+
+  <div class="letter-body">
+    {% for paragraphe in paragraphes %}
+    <p>{{ paragraphe }}</p>
+    {% endfor %}
+  </div>
+
+  <div class="letter-signature">{{ contact.nom }}</div>
+
+</div>
+</body>
+</html>

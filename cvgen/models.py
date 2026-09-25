@@ -99,6 +99,36 @@ class Selection(_Base):
     missing_keywords: list[str] = Field(default_factory=list)
 
 
+class ProjectChoice(_Base):
+    """Un projet retenu, avec les indices de puces à afficher."""
+    projet_id: str
+    bullet_indices: list[int] = Field(default_factory=list)
+
+
+class SelectionDraft(_Base):
+    """Forme demandée au LLM : listes uniquement, aucun dictionnaire à clés libres,
+    ce que les schémas de sortie structurée gèrent mal."""
+    role: str
+    projects: list[ProjectChoice]
+    skill_groups: list[SkillGroup]
+    bullet_overrides: list[BulletOverride] = Field(default_factory=list)
+    justification: str = ""
+    missing_keywords: list[str] = Field(default_factory=list)
+
+    def to_selection(self) -> "Selection":
+        return Selection(
+            role=self.role,
+            project_ids=[p.projet_id for p in self.projects],
+            skill_groups=self.skill_groups,
+            bullet_selection={
+                p.projet_id: p.bullet_indices for p in self.projects if p.bullet_indices
+            },
+            bullet_overrides=self.bullet_overrides,
+            justification=self.justification,
+            missing_keywords=self.missing_keywords,
+        )
+
+
 class Catalog(_Base):
     contact: Contact
     disponibilite: Disponibilite
@@ -179,12 +209,20 @@ def is_tech_shaped(token: str, position: int) -> bool:
     return False
 
 
-def tech_tokens(text: str) -> set[str]:
-    """Tokens techno-formés d'un texte, normalisés."""
+def tech_tokens(text: str, *, any_position: bool = False) -> set[str]:
+    """Tokens techno-formés d'un texte, normalisés.
+
+    `any_position=False` (défaut) sert à CONTRÔLER un texte rédigé : une majuscule
+    en début de phrase ne signale rien, sinon chaque mot initial serait suspect.
+
+    `any_position=True` sert à CONSTRUIRE une liste blanche, où il faut être
+    généreux : un libellé de catalogue réduit à « Python » ou « Excel » est un nom
+    de techno même s'il occupe la position initiale.
+    """
     found: set[str] = set()
     for sentence in re.split(r"(?<=[.!?:;])\s+", text):
         for position, token in enumerate(tokenize(sentence)):
-            if is_tech_shaped(token, position):
+            if is_tech_shaped(token, 1 if any_position else position):
                 normalized = normalize(token)
                 if normalized:
                     found.add(normalized)
