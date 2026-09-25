@@ -2,3 +2,6 @@ weasyprint
 jinja2
 pydantic>=2
 pyyaml
+google-genai
+python-dotenv
+trafilatura
