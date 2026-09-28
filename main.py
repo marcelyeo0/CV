@@ -9,14 +9,52 @@ from __future__ import annotations
 
 import argparse
 import datetime as dt
+import importlib.util
 import json
 import logging
+import os
 import re
+import subprocess
 import sys
 import unicodedata
 from pathlib import Path
 
-from apply.analyze import analyze_offer
+ROOT = Path(__file__).resolve().parent
+VENV_PYTHON = ROOT / "src" / ".venv" / ("Scripts/python.exe" if os.name == "nt" else "bin/python")
+DEPENDANCES = ("weasyprint", "jinja2", "pydantic", "yaml", "google.genai", "dotenv", "trafilatura")
+
+
+def _modules_manquants() -> list[str]:
+    manquants = []
+    for nom in DEPENDANCES:
+        try:
+            if importlib.util.find_spec(nom) is None:
+                manquants.append(nom)
+        except ModuleNotFoundError:  # parent absent, ex. google pour google.genai
+            manquants.append(nom)
+    return manquants
+
+
+def _relancer_dans_venv() -> None:
+    """Lancé avec un Python sans les dépendances : on repasse par src/.venv."""
+    manquants = _modules_manquants()
+    if not manquants:
+        return
+    dans_venv = Path(sys.prefix).resolve() == VENV_PYTHON.parent.parent.resolve()
+    if VENV_PYTHON.is_file() and not dans_venv:
+        code = subprocess.call([str(VENV_PYTHON), str(Path(__file__).resolve()), *sys.argv[1:]])
+        sys.exit(code)
+    sys.exit(
+        f"Modules manquants pour {sys.executable} : {', '.join(manquants)}\n"
+        f"  {VENV_PYTHON if VENV_PYTHON.is_file() else sys.executable} -m pip install -r "
+        f"{ROOT / 'requirements.txt'}"
+    )
+
+
+if __name__ == "__main__":
+    _relancer_dans_venv()
+
+from apply.analyze import analyze_offer  # noqa: E402
 from apply.ingest import IngestError, read_offer
 from apply.letter import LetterError, build_draft, fill_skeleton, remaining_placeholders
 from apply.llm import GeminiProvider, LLMError, LLMProvider
@@ -26,7 +64,6 @@ from cvgen.letter_render import LetterRenderError, render_letter
 from cvgen.models import Catalog, OfferAnalysis, Selection
 from cvgen.render import RenderPageError, render_cv
 
-ROOT = Path(__file__).resolve().parent
 OUTPUTS = ROOT / "outputs"
 
 LOGGER = logging.getLogger("cv")
@@ -178,12 +215,25 @@ def cmd_prepare(args: argparse.Namespace) -> int:
     _dump_json(dossier / "analysis.json", analysis)
     _dump_json(dossier / "selection.json", selection)
 
+    code = _ecrire_lettre(analysis, selection, catalog, provider, dossier, avertissements)
+    if code:
+        return code
+
+    _resume(analysis, selection, catalog, dossier, avertissements)
+    return 0
+
+
+def _ecrire_lettre(analysis: OfferAnalysis, selection: Selection, catalog: Catalog,
+                   provider: LLMProvider, dossier: Path, avertissements: list[str]) -> int:
     try:
         draft = build_draft(analysis, selection, catalog, provider)
     except (LetterError, LLMError) as exc:
         print(f"ERREUR de rédaction de la lettre : {exc}", file=sys.stderr)
+        rel = dossier.relative_to(ROOT).as_posix() if dossier.is_relative_to(ROOT) else dossier
         print(f"Le CV reste générable : offre.txt, analysis.json et selection.json sont "
-              f"écrits dans {dossier}", file=sys.stderr)
+              f"écrits dans {dossier}\n"
+              f"Relancer la lettre seule, plus tard :\n"
+              f'  python main.py lettre "{rel}"', file=sys.stderr)
         return 4
     markdown = fill_skeleton(draft, analysis, catalog)
     (dossier / "lm_draft.md").write_text(markdown, encoding="utf-8")
@@ -200,8 +250,42 @@ def cmd_prepare(args: argparse.Namespace) -> int:
         "raisons réelles, il compose à partir du catalogue. Relis-les et réécris-les avant "
         "d'envoyer — c'est ce que tu devras défendre en entretien."
     )
+    return 0
 
-    _resume(analysis, selection, catalog, dossier, avertissements)
+
+def _dossier_existant(brut: str) -> Path | None:
+    dossier = Path(brut)
+    if not dossier.is_absolute():
+        dossier = (ROOT / dossier).resolve()
+    if not dossier.is_dir():
+        print(f"Dossier introuvable : {dossier}", file=sys.stderr)
+        return None
+    return dossier
+
+
+def cmd_lettre(args: argparse.Namespace) -> int:
+    """Rédige lm_draft.md à partir d'un dossier déjà préparé, sans refaire l'analyse."""
+    dossier = _dossier_existant(args.dossier)
+    if dossier is None:
+        return 2
+    draft_path = dossier / "lm_draft.md"
+    if draft_path.is_file() and not args.force:
+        print(f"{draft_path} existe déjà (peut-être relu). --force pour l'écraser.",
+              file=sys.stderr)
+        return 2
+
+    catalog = load_catalog()
+    analysis: OfferAnalysis = _load_json(dossier / "analysis.json", OfferAnalysis)
+    selection: Selection = _load_json(dossier / "selection.json", Selection)
+
+    avertissements: list[str] = []
+    code = _ecrire_lettre(analysis, selection, catalog, _provider(), dossier, avertissements)
+    if code:
+        return code
+    for message in avertissements:
+        print(f"ATTENTION : {message}")
+    print(f"\n{draft_path.name} écrit. Relis-le, puis :")
+    print(f'  python main.py render "{dossier.relative_to(ROOT).as_posix()}"')
     return 0
 
 
@@ -237,11 +321,8 @@ def cmd_render(args: argparse.Namespace) -> int:
         print("Indiquer un dossier, ou --default <variante>", file=sys.stderr)
         return 2
 
-    dossier = Path(args.dossier)
-    if not dossier.is_absolute():
-        dossier = (ROOT / dossier).resolve()
-    if not dossier.is_dir():
-        print(f"Dossier introuvable : {dossier}", file=sys.stderr)
+    dossier = _dossier_existant(args.dossier)
+    if dossier is None:
         return 2
 
     analysis: OfferAnalysis = _load_json(dossier / "analysis.json", OfferAnalysis)
@@ -294,6 +375,13 @@ def build_parser() -> argparse.ArgumentParser:
     source.add_argument("--text", metavar="FICHIER", help="fichier texte de l'offre, ou - pour stdin")
     source.add_argument("--url", metavar="URL", help="URL de l'offre (best effort)")
     prepare.set_defaults(func=cmd_prepare)
+
+    lettre = sub.add_parser(
+        "lettre", help="rédige seulement lm_draft.md depuis un dossier créé par prepare"
+    )
+    lettre.add_argument("dossier", help="dossier créé par prepare")
+    lettre.add_argument("--force", action="store_true", help="écrase un lm_draft.md existant")
+    lettre.set_defaults(func=cmd_lettre)
 
     render = sub.add_parser("render", help="produit les PDF depuis un dossier relu")
     render.add_argument("dossier", nargs="?", help="dossier créé par prepare")

@@ -61,15 +61,42 @@ def from_text_file(path: Path | str) -> str:
     return _check_length(_normalize(raw), origine)
 
 
+# Certains sites (eFinancialCareers) répondent 405 au User-Agent de trafilatura et
+# 200 à celui d'un navigateur ordinaire.
+_HEADERS = {
+    "User-Agent": ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+                   "(KHTML, like Gecko) Chrome/140.0 Safari/537.36"),
+    "Accept": "text/html,application/xhtml+xml",
+    "Accept-Language": "fr-FR,fr;q=0.9,en;q=0.8",
+}
+
+
+def _download(url: str) -> str | None:
+    import urllib.error
+    import urllib.request
+
+    requete = urllib.request.Request(url, headers=_HEADERS)
+    try:
+        with urllib.request.urlopen(requete, timeout=20) as reponse:
+            charset = reponse.headers.get_content_charset() or "utf-8"
+            return reponse.read().decode(charset, errors="replace")
+    except (urllib.error.URLError, TimeoutError, ValueError) as exc:
+        LOGGER.info("Téléchargement direct échoué (%s), essai via trafilatura", exc)
+        return None
+
+
 def from_url(url: str) -> str:
-    """Extraction best effort. Aucun contournement de protection anti-bot."""
+    """Extraction best effort, en-têtes de navigateur ordinaires.
+
+    Aucun contournement de captcha ni de connexion : ces pages-là restent à coller.
+    """
     try:
         import trafilatura
     except ImportError as exc:  # pragma: no cover
         raise IngestError(f"trafilatura n'est pas installé : {exc}. " + _COLLER) from exc
 
     LOGGER.info("Téléchargement de %s", url)
-    downloaded = trafilatura.fetch_url(url)
+    downloaded = _download(url) or trafilatura.fetch_url(url)
     if not downloaded:
         raise IngestError(
             f"Page inaccessible : {url}\n"

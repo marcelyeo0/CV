@@ -60,12 +60,12 @@ qu'à partir de fichiers présents sur le disque. Rien n'est généré sans rele
 | `cvgen/templates/cv.html.j2` | Gabarit HTML du CV, autoéchappé. | contexte → HTML |
 | `cvgen/templates/letter.html.j2` | Gabarit HTML de la lettre. | contexte → HTML |
 | `cvgen/templates/base.css` | Charte commune CV + LM : 'Helvetica Neue', Arial, sans-serif ; ligatures désactivées, taille de base. | — |
-| `apply/ingest.py` | Récupère le texte de l'offre. | fichier / stdin / URL → `str` |
+| `apply/ingest.py` | Récupère le texte de l'offre (URL : en-têtes de navigateur ordinaires, extraction trafilatura). | fichier / stdin / URL → `str` |
 | `apply/analyze.py` | Extrait les informations de l'offre. | `str` → `OfferAnalysis` |
 | `apply/select.py` | Choisit projets et compétences. | `OfferAnalysis` + `Catalog` → `Selection` |
 | `apply/letter.py` | Rédige les quatre paragraphes du corps de la LM, vérifie leur vocabulaire et remplit le squelette. | `OfferAnalysis` + `Selection` + `Catalog` → `LetterDraft` → `lm_draft.md` |
 | `apply/llm.py` | Isole l'appel LLM derrière `LLMProvider.structured(prompt, schema, system)`. Convertit le schéma Pydantic au sous-ensemble accepté par Gemini et reprend les erreurs transitoires (503, 429, 500) avec attente croissante. | prompt + schéma → instance Pydantic |
-| `main.py` | CLI `prepare` / `render`. | — |
+| `main.py` | CLI `prepare` / `lettre` / `render` ; se relance dans `src/.venv` si une dépendance manque. | — |
 
 ## Installation
 
@@ -84,8 +84,16 @@ cp .env.example .env          # puis renseigner GEMINI_API_KEY
 
 Clé API : https://aistudio.google.com/apikey
 
-Variables optionnelles dans `.env` : `GEMINI_MODEL` (défaut `gemini-3.8-flash`) et
-`GEMINI_TEMPERATURE` (défaut `0.2`, pour une sélection reproductible).
+Variables optionnelles dans `.env` :
+
+- `GEMINI_MODEL` (défaut `gemini-3.8-flash`) ;
+- `GEMINI_FALLBACK_MODELS` (défaut `gemini-3.8-flash,gemini-3.7-flash,gemini-flash-latest`) :
+  essayés dans l'ordre si le modèle principal reste saturé (503/429) après 4 reprises, ou
+  s'il est indisponible pour ta clé (404). Vide = aucun secours ;
+- `GEMINI_TEMPERATURE` (défaut `0.2`, pour une sélection reproductible).
+
+`python main.py` peut être lancé avec n'importe quel Python : s'il manque une dépendance
+et que `src/.venv` existe, le script se relance tout seul avec l'interpréteur du venv.
 
 ## Usage
 
@@ -111,7 +119,13 @@ n'est pas traduit.
 
 Codes de sortie de `prepare` : `2` offre illisible, `3` échec d'analyse ou de sélection,
 `4` échec de rédaction de la lettre — dans ce dernier cas `offre.txt`, `analysis.json` et
-`selection.json` sont déjà écrits et le CV reste rendable.
+`selection.json` sont déjà écrits et le CV reste rendable. Pour relancer la lettre seule,
+sans refaire l'analyse ni la sélection (utile quand Gemini est saturé) :
+
+```bash
+python main.py lettre outputs/2027-01-15_Decathlon_Data-Analyst/
+python main.py lettre outputs/2027-01-15_Decathlon_Data-Analyst/ --force   # écrase lm_draft.md
+```
 
 ## La lettre de motivation
 

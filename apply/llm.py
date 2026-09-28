@@ -20,11 +20,15 @@ LOGGER = logging.getLogger(__name__)
 ROOT = Path(__file__).resolve().parent.parent
 
 DEFAULT_MODEL = "gemini-3.8-flash"
+# Essayés dans l'ordre quand le modèle principal reste saturé (503) après reprises.
+DEFAULT_FALLBACK_MODELS = ("gemini-3.8-flash", "gemini-3.7-flash", "gemini-flash-latest")
 # Déterminisme : on veut une sélection reproductible, pas de la créativité.
 DEFAULT_TEMPERATURE = 0.2
 
 # Erreurs côté serveur, sans rapport avec la requête : saturation, quota court terme.
 TRANSIENT_CODES = ("503", "429", "500", "UNAVAILABLE", "RESOURCE_EXHAUSTED")
+# Modèle retiré ou inaccessible à cette clé : inutile d'insister, on passe au suivant.
+UNAVAILABLE_MODEL_CODES = ("404", "NOT_FOUND")
 TRANSIENT_ATTEMPTS = 4
 TRANSIENT_BACKOFF_S = 4.0
 
@@ -109,6 +113,11 @@ class GeminiProvider:
             )
 
         self.model = model or os.environ.get("GEMINI_MODEL", "").strip() or DEFAULT_MODEL
+        brut = os.environ.get("GEMINI_FALLBACK_MODELS")
+        secours = brut.split(",") if brut is not None else DEFAULT_FALLBACK_MODELS
+        self.fallback_models = [
+            m for m in dict.fromkeys(s.strip() for s in secours) if m and m != self.model
+        ]
         if temperature is not None:
             self.temperature = temperature
         else:
@@ -125,29 +134,54 @@ class GeminiProvider:
         return self._client
 
     def _call_with_backoff(self, prompt: str, config, nom_schema: str):
-        """Reprend sur les erreurs transitoires de l'API (503, 429, 500)."""
+        """Reprend sur les erreurs transitoires (503, 429, 500), puis change de modèle.
+
+        Un modèle de secours qui répond devient le modèle de la session : les appels
+        suivants ne repassent pas par l'attente sur le modèle saturé.
+        """
         import time
 
         derniere: Exception | None = None
-        for tentative in range(1, TRANSIENT_ATTEMPTS + 1):
-            try:
-                return self._get_client().models.generate_content(
-                    model=self.model, contents=prompt, config=config
-                )
-            except Exception as exc:  # l'API remonte des erreurs hétérogènes
-                derniere = exc
-                message = str(exc)
-                transitoire = any(code in message for code in TRANSIENT_CODES)
-                if not transitoire or tentative == TRANSIENT_ATTEMPTS:
-                    break
-                attente = TRANSIENT_BACKOFF_S * (2 ** (tentative - 1))
-                LOGGER.warning(
-                    "Erreur transitoire sur %s (tentative %d/%d), reprise dans %.0f s : %s",
-                    nom_schema, tentative, TRANSIENT_ATTEMPTS, attente, message.split("\n")[0],
-                )
-                time.sleep(attente)
+        for modele in [self.model, *self.fallback_models]:
+            transitoire = False
+            for tentative in range(1, TRANSIENT_ATTEMPTS + 1):
+                try:
+                    reponse = self._get_client().models.generate_content(
+                        model=modele, contents=prompt, config=config
+                    )
+                except Exception as exc:  # l'API remonte des erreurs hétérogènes
+                    derniere = exc
+                    message = str(exc)
+                    if any(code in message for code in UNAVAILABLE_MODEL_CODES):
+                        LOGGER.warning("%s indisponible pour cette clé, modèle suivant", modele)
+                        transitoire = True
+                        break
+                    transitoire = any(code in message for code in TRANSIENT_CODES)
+                    if not transitoire or tentative == TRANSIENT_ATTEMPTS:
+                        break
+                    attente = TRANSIENT_BACKOFF_S * (2 ** (tentative - 1))
+                    LOGGER.warning(
+                        "%s saturé sur %s (tentative %d/%d), reprise dans %.0f s : %s",
+                        modele, nom_schema, tentative, TRANSIENT_ATTEMPTS, attente,
+                        message.split("\n")[0][:120],
+                    )
+                    time.sleep(attente)
+                    continue
+                if modele != self.model:
+                    LOGGER.warning("Bascule sur le modèle de secours %s", modele)
+                    # L'ancien principal redevient un secours : sa saturation peut passer.
+                    self.fallback_models = [
+                        m for m in self.fallback_models if m != modele
+                    ] + [self.model]
+                    self.model = modele
+                return reponse
+            if not transitoire:
+                break  # erreur liée à la requête : un autre modèle ne ferait pas mieux
 
-        raise LLMError(f"Appel Gemini ({self.model}) échoué : {derniere}") from derniere
+        essayes = ", ".join([self.model, *self.fallback_models])
+        raise LLMError(
+            f"Appel Gemini échoué (modèles essayés : {essayes}). Dernière erreur : {derniere}"
+        ) from derniere
 
     def structured(self, prompt: str, schema: type[T], system: str = "") -> T:
         from google.genai import types
