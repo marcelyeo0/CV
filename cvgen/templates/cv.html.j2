@@ -28,7 +28,7 @@
   {% for f in formation %}
   <div class="entry">
     <div class="entry-head">
-      <span class="entry-title"><span class="bullet-dot"></span>{{ f.titre }}</span><span class="entry-sep">|</span><span class="entry-dates">{{ f.dates }}</span>
+      <span class="entry-title"><span class="bullet-dot"></span>{{ f.titre }}</span><span class="entry-dates">{{ f.dates }}</span>
     </div>
     <div class="entry-etab">{{ f.etab }}</div>
   </div>
@@ -38,7 +38,7 @@
   {% for e in experiences %}
   <div class="entry">
     <div class="entry-head">
-      <span class="entry-title"><span class="bullet-dot"></span>{{ e.titre }}</span><span class="entry-sep">|</span><span class="entry-dates">{{ e.dates }}</span>
+      <span class="entry-title"><span class="bullet-dot"></span>{{ e.titre }}</span><span class="entry-dates">{{ e.dates }}</span>
     </div>
     <div class="entry-etab">{{ e.etab }}</div>
     <ul class="bullets">
@@ -54,7 +54,7 @@
   {% for p in projets %}
   <div class="entry">
     <div class="entry-head">
-      <span class="entry-title"><span class="bullet-dot"></span>{{ p.titre }}</span><span class="entry-sep">|</span><span class="entry-dates">{{ p.dates }}</span>
+      <span class="entry-title"><span class="bullet-dot"></span>{{ p.titre }}</span><span class="entry-dates">{{ p.dates }}</span>
     </div>
     <ul class="bullets">
       {% for b in p.bullets %}<li>{{ b }}</li>{% endfor %}
@@ -67,7 +67,7 @@
   {% for p in projet_academique %}
   <div class="entry">
     <div class="entry-head">
-      <span class="entry-title"><span class="bullet-dot"></span>{{ p.titre }}</span><span class="entry-sep">|</span><span class="entry-dates">{{ p.dates }}</span>
+      <span class="entry-title"><span class="bullet-dot"></span>{{ p.titre }}</span><span class="entry-dates">{{ p.dates }}</span>
     </div>
     <div class="entry-text">{{ p.bullets|join(' ') }}</div>
   </div>

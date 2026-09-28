@@ -64,17 +64,23 @@ h2.section.with-link .side-link {
 
 .entry { margin-bottom: 9px; }
 
-/* Dates dans le flux de texte, juste après le titre.
-   Ni float ni colonne alignée à droite : les deux font détecter une colonne
-   séparée aux extracteurs (pdftotext, parseurs ATS), qui regroupent alors
-   toutes les dates en fin de section au lieu de les garder avec leur entrée. */
+/* Dates au bord droit, choix assumé pour la lecture humaine. Contrepartie : pdftotext
+   et certains parseurs ATS y voient une colonne séparée et regroupent les dates en fin
+   de section au lieu de les garder avec leur entrée. Pour les remettre dans le flux :
+   retirer le flex et replacer un séparateur entre titre et dates dans cv.html.j2. */
+.entry-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
 .entry-title { font-weight: 700; }
 .entry-dates {
+    flex: none;
+    margin-left: 10px;
     font-size: {{ (base_px * 0.9106)|round(2) }}px;
     color: #444;
     white-space: nowrap;
 }
-.entry-sep { color: #888; margin: 0 5px; }
 .entry-etab {
     font-style: italic;
     font-size: {{ (base_px * 0.9268)|round(2) }}px;
