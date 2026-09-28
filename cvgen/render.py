@@ -19,13 +19,10 @@ LOGGER = logging.getLogger(__name__)
 
 ROOT = Path(__file__).resolve().parent.parent
 TEMPLATES_DIR = Path(__file__).resolve().parent / "templates"
-FONTS_DIR = ROOT / "assets" / "fonts"
-
 NAVY = "#2e3e4e"
 
-# Taille de base. Latin Modern est plus étroit qu'Arial : valeur calée pour que
-# les deux sélections par défaut tiennent sur 1 page sans aucun retrait.
-BASE_PX = 11.6
+# Taille de base de l'ancien CV ATS (police sans empattement).
+BASE_PX = 12.3
 
 MIN_PROJETS = 1
 MIN_BULLETS_PAR_PROJET = 1
@@ -61,9 +58,7 @@ def _environment() -> Environment:
 
 
 def _css(env: Environment, base_px: float = BASE_PX) -> str:
-    # file:// pour que WeasyPrint résolve les polices sous Windows.
-    fonts_url = FONTS_DIR.as_uri()
-    return env.get_template("base.css").render(fonts_dir=fonts_url, navy=NAVY, base_px=base_px)
+    return env.get_template("base.css").render(navy=NAVY, base_px=base_px)
 
 
 def _cv_context(selection: Selection, catalog: Catalog) -> dict[str, Any]:

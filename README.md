@@ -59,14 +59,13 @@ qu'à partir de fichiers présents sur le disque. Rien n'est généré sans rele
 | `cvgen/letter_render.py` | Découpe `lm_draft.md` relu en blocs et rend la lettre sur 1 page. | `lm_draft.md` → `.pdf` + `RenderReport` |
 | `cvgen/templates/cv.html.j2` | Gabarit HTML du CV, autoéchappé. | contexte → HTML |
 | `cvgen/templates/letter.html.j2` | Gabarit HTML de la lettre. | contexte → HTML |
-| `cvgen/templates/base.css` | Charte commune CV + LM : Latin Modern, ligatures désactivées, taille de base. | — |
+| `cvgen/templates/base.css` | Charte commune CV + LM : 'Helvetica Neue', Arial, sans-serif ; ligatures désactivées, taille de base. | — |
 | `apply/ingest.py` | Récupère le texte de l'offre. | fichier / stdin / URL → `str` |
 | `apply/analyze.py` | Extrait les informations de l'offre. | `str` → `OfferAnalysis` |
 | `apply/select.py` | Choisit projets et compétences. | `OfferAnalysis` + `Catalog` → `Selection` |
 | `apply/letter.py` | Rédige les quatre paragraphes du corps de la LM, vérifie leur vocabulaire et remplit le squelette. | `OfferAnalysis` + `Selection` + `Catalog` → `LetterDraft` → `lm_draft.md` |
 | `apply/llm.py` | Isole l'appel LLM derrière `LLMProvider.structured(prompt, schema, system)`. Convertit le schéma Pydantic au sous-ensemble accepté par Gemini et reprend les erreurs transitoires (503, 429, 500) avec attente croissante. | prompt + schéma → instance Pydantic |
 | `main.py` | CLI `prepare` / `render`. | — |
-| `assets/fonts/` | Latin Modern Roman (GUST Font License), versionnée. | — |
 
 ## Installation
 

@@ -5,3 +5,5 @@ pyyaml
 google-genai
 python-dotenv
 trafilatura
+
+pytest
