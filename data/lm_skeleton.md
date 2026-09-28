@@ -14,9 +14,10 @@ rédigés par le LLM :
 Les paragraphes 3 et 4 sont les seuls du pipeline qui ne se déduisent pas d'une donnée
 vérifiable. Relis-les et réécris-les à ta main avant d'envoyer : c'est ce que tu devras
 défendre en entretien.
+
+L'adresse postale n'apparaît pas dans la lettre : nom, e-mail et téléphone suffisent.
 -->
 {{ contact_nom }}
-{{ contact_adresse }}
 {{ contact_email }} · {{ contact_tel }}
 
 {{ entreprise }}

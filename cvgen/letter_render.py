@@ -95,5 +95,8 @@ def _shrink_letter(context: dict[str, Any]) -> str | None:
 
 def render_letter(markdown: str, contact, out_path: Path | str) -> RenderReport:
     context = parse_draft(markdown)
+    # Un brouillon antérieur peut encore porter l'adresse postale : elle n'a pas sa
+    # place dans la lettre.
+    context["expediteur"] = [l for l in context["expediteur"] if l != contact.adresse]
     context["contact"] = contact
     return _render_to_one_page("letter.html.j2", context, Path(out_path), _shrink_letter)

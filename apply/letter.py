@@ -256,7 +256,6 @@ def fill_skeleton(
 
     valeurs = {
         "contact_nom": catalog.contact.nom,
-        "contact_adresse": catalog.contact.adresse,
         "contact_email": catalog.contact.email,
         "contact_tel": catalog.contact.tel,
         "entreprise": analysis.entreprise or "",
