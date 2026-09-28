@@ -24,11 +24,13 @@ Le code rejette tout identifiant inconnu et toute techno absente du catalogue.
                             │              liste blanche -> ERREUR
                             ▼
                   apply/letter.py ──► LLM ──► LetterDraft        (lm_draft.md)
+                            │              4 paragraphes, termes et chiffres
+                            │              hors catalogue / offre -> retry puis ERREUR
                             │
                   ═══════ RELECTURE PAR MARCEL ═══════
                             │
                             ▼
-                  cvgen/render.py ──► WeasyPrint ──► CV.pdf + LM.pdf
+      cvgen/render.py + cvgen/letter_render.py ──► WeasyPrint ──► CV.pdf + LM.pdf
                      (réduit jusqu'à tenir sur 1 page)
 ```
 
@@ -42,25 +44,28 @@ qu'à partir de fichiers présents sur le disque. Rien n'est généré sans rele
 | Fichier | Rôle | Entrée / Sortie |
 |---|---|---|
 | **`data/catalog.yaml`** | Source unique de vérité : contact, disponibilité, formation, expériences, projets, compétences, langues, centres d'intérêt, et les deux sélections par défaut. | — |
-| `data/lm_skeleton.md` | Squelette de la lettre, avec les `[À REMPLIR PAR MARCEL]` que le LLM ne touche pas. *(phase 5)* | — |
+| `data/lm_skeleton.md` | Squelette de la lettre : en-tête, objet, formules de politesse et quatre emplacements `{{ ... }}` remplis par le LLM. Un bloc `[À REMPLIR PAR MARCEL ...]` ajouté à la main bloque le rendu tant qu'il n'est pas remplacé. | — |
 | `.env` | Ta clé Gemini. Copié depuis `.env.example`, jamais versionné. | — |
 | `outputs/<dossier>/selection.json` | La sélection proposée, à relire et corriger avant rendu. | — |
+| `outputs/<dossier>/lm_draft.md` | Le brouillon de lettre, à relire. Les paragraphes 3 et 4 sont à réécrire à ta main (voir plus bas). | — |
 
 ### Code — à ne pas avoir besoin de toucher
 
 | Fichier | Rôle | Entrée → Sortie |
 |---|---|---|
-| `cvgen/models.py` | Schémas Pydantic (`Catalog`, `Selection`, `OfferAnalysis`) et détection des tokens « techno-formés ». | — |
+| `cvgen/models.py` | Schémas Pydantic (`Catalog`, `Selection`, `OfferAnalysis`, `LetterDraft`) et détection des tokens « techno-formés ». | — |
 | `cvgen/catalog.py` | Charge le catalogue, construit la liste blanche des technos, valide une sélection, la résout en contenu prêt à rendre. | `catalog.yaml` → `Catalog` ; `Selection` → `ResolvedCV` |
 | `cvgen/render.py` | Rend le PDF et retire les éléments les moins prioritaires jusqu'à tenir sur 1 page. | `Selection` + `Catalog` → `.pdf` + `RenderReport` |
+| `cvgen/letter_render.py` | Découpe `lm_draft.md` relu en blocs et rend la lettre sur 1 page. | `lm_draft.md` → `.pdf` + `RenderReport` |
 | `cvgen/templates/cv.html.j2` | Gabarit HTML du CV, autoéchappé. | contexte → HTML |
+| `cvgen/templates/letter.html.j2` | Gabarit HTML de la lettre. | contexte → HTML |
 | `cvgen/templates/base.css` | Charte commune CV + LM : Latin Modern, ligatures désactivées, taille de base. | — |
 | `apply/ingest.py` | Récupère le texte de l'offre. | fichier / stdin / URL → `str` |
 | `apply/analyze.py` | Extrait les informations de l'offre. | `str` → `OfferAnalysis` |
-| `apply/select.py` | Choisit projets et compétences. *(phase 4)* | `OfferAnalysis` + `Catalog` → `Selection` |
-| `apply/letter.py` | Rédige les seules parties de la LM propres à l'offre. *(phase 5)* | `Selection` → `LetterDraft` |
-| `apply/llm.py` | Isole l'appel LLM derrière `LLMProvider.structured(prompt, schema, system)`. | prompt + schéma → instance Pydantic |
-| `main.py` | CLI `prepare` / `render`. *(phase 6)* | — |
+| `apply/select.py` | Choisit projets et compétences. | `OfferAnalysis` + `Catalog` → `Selection` |
+| `apply/letter.py` | Rédige les quatre paragraphes du corps de la LM, vérifie leur vocabulaire et remplit le squelette. | `OfferAnalysis` + `Selection` + `Catalog` → `LetterDraft` → `lm_draft.md` |
+| `apply/llm.py` | Isole l'appel LLM derrière `LLMProvider.structured(prompt, schema, system)`. Convertit le schéma Pydantic au sous-ensemble accepté par Gemini et reprend les erreurs transitoires (503, 429, 500) avec attente croissante. | prompt + schéma → instance Pydantic |
+| `main.py` | CLI `prepare` / `render`. | — |
 | `assets/fonts/` | Latin Modern Roman (GUST Font License), versionnée. | — |
 
 ## Installation
@@ -72,13 +77,16 @@ WeasyPrint a besoin de bibliothèques système (Pango, cairo, GDK-PixBuf).
 - **macOS** : `brew install pango libffi`
 
 ```bash
-python -m venv .venv
-.venv/Scripts/activate        # Windows ; source .venv/bin/activate ailleurs
+python -m venv src/.venv
+src/.venv/Scripts/activate    # Windows ; source src/.venv/bin/activate ailleurs
 pip install -r requirements.txt
 cp .env.example .env          # puis renseigner GEMINI_API_KEY
 ```
 
 Clé API : https://aistudio.google.com/apikey
+
+Variables optionnelles dans `.env` : `GEMINI_MODEL` (défaut `gemini-3.8-flash`) et
+`GEMINI_TEMPERATURE` (défaut `0.2`, pour une sélection reproductible).
 
 ## Usage
 
@@ -101,6 +109,24 @@ python main.py render --default all
 
 Si l'offre est en anglais, un avertissement s'affiche : la LM reste en français et le CV
 n'est pas traduit.
+
+Codes de sortie de `prepare` : `2` offre illisible, `3` échec d'analyse ou de sélection,
+`4` échec de rédaction de la lettre — dans ce dernier cas `offre.txt`, `analysis.json` et
+`selection.json` sont déjà écrits et le CV reste rendable.
+
+## La lettre de motivation
+
+Le LLM rédige les quatre paragraphes du corps :
+
+1. `pourquoi_entreprise` — l'entreprise et le périmètre du poste, d'après l'offre.
+2. `adequation_missions` — les missions de l'offre face aux projets de `selection.json`.
+3. `motivation_personnelle` — **proposition à réécrire**.
+4. `apport_parcours` — **proposition à réécrire**.
+
+Les paragraphes 1 et 2 se déduisent de données vérifiables. Les paragraphes 3 et 4 ne
+peuvent citer que des faits du catalogue (formation, expériences, projet académique,
+langues, centres d'intérêt), mais le LLM ne connaît pas tes raisons réelles : il compose.
+Relis-les et réécris-les avant d'envoyer, c'est ce que tu défendras en entretien.
 
 ## Ajouter un projet au catalogue
 
@@ -143,4 +169,7 @@ Même principe pour une compétence, sous `competences` :
 - 3 projets au maximum, ordonnés.
 - `missing_keywords` liste les mots-clés de l'offre absents du catalogue. C'est à toi de
   décider d'ajouter la compétence, honnêtement — jamais au code.
+- La lettre ne peut citer que des technos, noms propres et chiffres présents dans la
+  sélection, le parcours du catalogue ou l'offre. Sinon : un retry avec l'erreur renvoyée
+  au LLM, puis échec.
 - Tout PDF fait 1 page ; les retraits effectués pour y arriver sont journalisés.
