@@ -160,9 +160,18 @@ class OfferAnalysis(_Base):
 
 
 class LetterDraft(_Base):
-    """Seules les deux sections spécifiques à l'offre sont rédigées par le LLM."""
+    """Les quatre paragraphes de la lettre, tous rédigés par le LLM.
+
+    Les deux premiers ne s'appuient que sur l'offre et la sélection. Les deux
+    derniers touchent au parcours et à la motivation : ils ne peuvent citer que des
+    faits du catalogue, mais leur formulation reste une PROPOSITION à relire et à
+    réécrire — c'est le seul endroit de la chaîne où le texte n'est pas déductible
+    d'une donnée vérifiable.
+    """
     pourquoi_entreprise: str
     adequation_missions: str
+    motivation_personnelle: str
+    apport_parcours: str
 
 
 # ---------------------------------------------------------------------------

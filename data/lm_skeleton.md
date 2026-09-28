@@ -1,14 +1,19 @@
 <!--
 Squelette de lettre de motivation.
 
-Les blocs {{ ... }} sont remplis automatiquement :
-  - {{ pourquoi_entreprise }} et {{ adequation_missions }} sont rédigés par le LLM à
-    partir de l'offre et de la sélection ; ils ne citent que des projets et des
-    compétences présents dans selection.json.
-  - les autres viennent du catalogue ou de l'analyse de l'offre.
+Les blocs {{ ... }} sont remplis automatiquement. Les quatre paragraphes du corps sont
+rédigés par le LLM :
 
-Les blocs [À REMPLIR PAR MARCEL] ne sont JAMAIS écrits automatiquement. Le rendu PDF
-échoue tant qu'ils sont là : c'est voulu, ta motivation ne s'invente pas.
+  1. {{ pourquoi_entreprise }}     — l'entreprise et le poste, d'après l'offre
+  2. {{ adequation_missions }}     — missions de l'offre face aux projets de selection.json
+  3. {{ motivation_personnelle }}  — PROPOSITION à relire : le LLM ne connaît pas tes
+                                     raisons réelles, il compose à partir du catalogue
+  4. {{ apport_parcours }}         — PROPOSITION à relire : idem, à partir de ta formation
+                                     et de tes expériences du catalogue
+
+Les paragraphes 3 et 4 sont les seuls du pipeline qui ne se déduisent pas d'une donnée
+vérifiable. Relis-les et réécris-les à ta main avant d'envoyer : c'est ce que tu devras
+défendre en entretien.
 -->
 {{ contact_nom }}
 {{ contact_adresse }}
@@ -27,16 +32,11 @@ Madame, Monsieur,
 
 {{ adequation_missions }}
 
-[À REMPLIR PAR MARCEL : pourquoi ce métier et ces missions t'intéressent
-personnellement. 2 ou 3 phrases, écrites par toi. Pas de formule creuse : une raison
-concrète que tu peux défendre en entretien.]
+{{ motivation_personnelle }}
 
-[À REMPLIR PAR MARCEL : ce que ton parcours t'a apporté et que tu veux mettre en avant
-ici — prépa, olympiades de mathématiques, ISIMA, Côte d'Ivoire, associatif. 2 ou 3
-phrases.]
+{{ apport_parcours }}
 
-Je suis disponible pour un {{ disponibilite_duree }} {{ disponibilite_debut }}, et je
-reste à votre disposition pour en échanger.
+Je suis disponible pour un {{ disponibilite_duree }} {{ disponibilite_debut }}, et je reste à votre disposition pour en échanger.
 
 Je vous prie d'agréer, Madame, Monsieur, l'expression de mes salutations respectueuses.
 

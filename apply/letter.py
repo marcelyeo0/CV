@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
-"""Lettre de motivation : le LLM ne rédige que les deux parties propres à l'offre.
+"""Lettre de motivation : les quatre paragraphes du corps sont rédigés par le LLM.
 
-La motivation personnelle et le parcours restent des `[À REMPLIR PAR MARCEL]`.
-Le vocabulaire technique des parties rédigées est limité à la `Selection` et à
-l'offre elle-même.
+Les deux premiers se déduisent de l'offre et de la `Selection`. Les deux derniers
+touchent au parcours et à la motivation : ils ne peuvent citer que des faits du
+catalogue, mais restent des PROPOSITIONS à relire — c'est le seul endroit de la
+chaîne où le texte n'est pas déductible d'une donnée vérifiable.
 """
 
 from __future__ import annotations
@@ -26,21 +27,26 @@ SKELETON_PATH = ROOT / "data" / "lm_skeleton.md"
 PLACEHOLDER_RE = re.compile(r"\[À REMPLIR PAR MARCEL[^\]]*\]")
 VILLE_EXPEDITION = "Clermont-Ferrand"
 
+# Paragraphes dont la formulation ne se déduit pas d'une donnée : à relire.
+CHAMPS_A_RELIRE = ("motivation_personnelle", "apport_parcours")
+
 MOIS_FR = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août",
            "septembre", "octobre", "novembre", "décembre"]
 
-SYSTEM = """Tu rédiges deux paragraphes d'une lettre de motivation en français.
+SYSTEM = """Tu rédiges les quatre paragraphes du corps d'une lettre de motivation en français.
 
-Contraintes absolues :
-- Tu ne peux citer QUE les projets et compétences listés dans la sélection fournie, et
-  les éléments de l'offre. Aucune autre technologie, aucun autre projet, aucun chiffre
-  qui ne vienne pas de ces deux sources.
-- N'invente jamais la motivation personnelle du candidat, ses goûts, ses valeurs, ni un
-  lien affectif avec l'entreprise. D'autres paragraphes, écrits par lui, s'en chargent.
-- Ton sobre et factuel. Pas de superlatif, pas de formule creuse ("depuis toujours
-  passionné", "votre entreprise leader", "c'est avec un grand enthousiasme").
-- Pas de flatterie. Pas de conditionnel de politesse à rallonge.
-- Français, vouvoiement, environ 130 mots par paragraphe."""
+Interdictions absolues :
+- Aucun fait qui ne soit pas dans l'offre, dans la sélection ou dans le parcours fournis.
+  Pas de technologie, pas de chiffre, pas de projet, pas d'employeur, pas de diplôme, pas
+  d'anecdote qui ne vienne de ces sources.
+- Pas d'affirmation invérifiable sur le candidat : pas de « depuis l'enfance », pas de
+  passion déclarée pour une marque ou un produit, pas de valeur personnelle inventée, pas
+  de rencontre ou de lecture imaginaire.
+- Pas de superlatif, pas de flatterie, pas de formule creuse (« entreprise leader »,
+  « c'est avec un grand enthousiasme », « votre prestigieuse société »).
+
+Style : sobre, factuel, phrases courtes, vouvoiement, environ 110 mots par paragraphe.
+Une lettre qui reste sous 400 mots au total tient sur une page."""
 
 PROMPT = """# Offre
 
@@ -55,7 +61,7 @@ Missions :
 Compétences requises : {requises}
 Compétences appréciées : {appreciees}
 
-# Sélection retenue pour le CV (seule matière autorisée)
+# Sélection retenue pour le CV
 
 Intitulé ciblé : {role}
 
@@ -65,15 +71,35 @@ Projets :
 Compétences :
 {competences}
 
+# Parcours du candidat (seuls faits utilisables pour les paragraphes 3 et 4)
+
+Formation :
+{formation}
+
+Expériences :
+{experiences}
+
+Projet académique :
+{academique}
+
+Langues : {langues}
+Centres d'intérêt : {interets}
+
 # Ce que tu dois produire
 
-- `pourquoi_entreprise` : ce que fait l'entreprise et en quoi le poste décrit dans
-  l'offre correspond à ce que le candidat cherche à faire. Appuie-toi sur des éléments
-  concrets de l'offre (le périmètre du poste, les missions, le secteur). N'attribue
-  aucun sentiment au candidat.
-- `adequation_missions` : la mise en regard des missions de l'offre avec les projets de
-  la sélection ci-dessus. Nomme les projets et les compétences tels qu'ils sont écrits.
-  Reste vérifiable : ce paragraphe doit être défendable en entretien.
+1. `pourquoi_entreprise` : ce que fait l'entreprise et le périmètre du poste, d'après
+   l'offre. En quoi ce périmètre correspond au type de travail que le candidat cherche.
+   N'attribue aucun sentiment au candidat.
+2. `adequation_missions` : les missions de l'offre mises en regard des projets de la
+   sélection. Nomme les projets et les compétences tels qu'ils sont écrits. Chaque
+   affirmation doit être défendable en entretien.
+3. `motivation_personnelle` : ce qui, dans ce métier et ces missions, justifie une
+   candidature. Appuie-toi UNIQUEMENT sur des éléments du parcours ci-dessus : la nature
+   des projets déjà menés, la formation suivie, les expériences, éventuellement un centre
+   d'intérêt s'il éclaire vraiment le poste. Ne prétends pas connaître les goûts ou
+   l'histoire du candidat au-delà de ces faits.
+4. `apport_parcours` : ce que la formation et les expériences listées apportent pour ce
+   poste précis. Reste sur des faits vérifiables et leur conséquence concrète.
 {correction}"""
 
 RETRY_HEADER = """
@@ -83,12 +109,12 @@ Ta réponse précédente a été rejetée :
 
 {erreur}
 
-Réécris les deux paragraphes sans ces éléments.
+Réécris les quatre paragraphes sans ces éléments.
 """
 
 
 class LetterError(Exception):
-    """Brouillon de lettre non conforme, ou squelette non relu."""
+    """Brouillon de lettre non conforme."""
 
 
 def _format_date(jour: dt.date) -> str:
@@ -98,17 +124,33 @@ def _format_date(jour: dt.date) -> str:
 def _allowed_tokens(
     selection: Selection, catalog: Catalog, analysis: OfferAnalysis
 ) -> tuple[set[str], set[str]]:
-    """Technos et chiffres citables : ceux de la sélection et ceux de l'offre."""
+    """Technos, noms propres et chiffres citables.
+
+    Trois sources légitimes : la sélection, le parcours du catalogue (qui figure de
+    toute façon sur le CV), et l'offre elle-même.
+    """
     cv = resolve(selection, catalog)
     competences = {c.id: c for c in catalog.competences}
 
-    textes = [cv.tagline, selection.role, catalog.contact.nom, VILLE_EXPEDITION]
+    textes = [cv.tagline, selection.role, catalog.contact.nom, VILLE_EXPEDITION,
+              catalog.disponibilite.duree, catalog.disponibilite.debut]
+
     for projet in cv.projets:
         textes += [projet.titre, *projet.bullets]
     for groupe in selection.skill_groups:
         textes.append(catalog.categories[groupe.categorie])
         textes += [competences[i].label for i in groupe.skill_ids]
-    # L'offre est une source légitime : nom de l'entreprise, outils qu'elle cite, lieu.
+
+    # Parcours : imprimé sur tous les CV, donc citable dans la lettre.
+    for formation in catalog.formation:
+        textes += [formation.titre, formation.dates, formation.etab]
+    for experience in catalog.experiences:
+        textes += [experience.titre, experience.dates, experience.etab, *experience.bullets]
+    for projet in catalog.projet_academique:
+        textes += [projet.titre, projet.dates, *projet.bullets]
+    textes += catalog.langues + catalog.centres_interet
+
+    # L'offre : nom de l'entreprise, lieu, outils et termes métier qu'elle cite.
     textes += [analysis.intitule, analysis.entreprise, analysis.lieu, analysis.type_contrat]
     textes += analysis.missions + analysis.competences_requises
     textes += analysis.competences_appreciees + analysis.mots_cles
@@ -127,11 +169,11 @@ def check_draft(
     technos, chiffres = _allowed_tokens(selection, catalog, analysis)
     violations: list[str] = []
 
-    for champ, texte in (("pourquoi_entreprise", draft.pourquoi_entreprise),
-                         ("adequation_missions", draft.adequation_missions)):
+    for champ in LetterDraft.model_fields:
+        texte = getattr(draft, champ)
         inconnues = sorted(tech_tokens(texte) - technos)
         if inconnues:
-            violations.append(f"{champ} : termes hors sélection et hors offre : {inconnues}")
+            violations.append(f"{champ} : termes hors catalogue et hors offre : {inconnues}")
         nouveaux = sorted(numbers(texte) - chiffres)
         if nouveaux:
             violations.append(f"{champ} : chiffres inédits : {nouveaux}")
@@ -150,16 +192,6 @@ def build_draft(
     competences = {c.id: c for c in catalog.competences}
     projets = projet_index(catalog)
 
-    bloc_projets = "\n".join(
-        f"- {p.titre} ({projets[p.id].dates})\n" + "\n".join(f"    {b}" for b in p.bullets)
-        for p in cv.projets
-    )
-    bloc_competences = "\n".join(
-        f"- {catalog.categories[g.categorie]} : "
-        + ", ".join(competences[i].label for i in g.skill_ids)
-        for g in selection.skill_groups
-    )
-
     base = {
         "poste": analysis.intitule or "(non précisé)",
         "entreprise": analysis.entreprise or "(non précisée)",
@@ -169,8 +201,30 @@ def build_draft(
         "requises": ", ".join(analysis.competences_requises) or "(non précisées)",
         "appreciees": ", ".join(analysis.competences_appreciees) or "(non précisées)",
         "role": selection.role,
-        "projets": bloc_projets,
-        "competences": bloc_competences,
+        "projets": "\n".join(
+            f"- {p.titre} ({projets[p.id].dates})\n"
+            + "\n".join(f"    {b}" for b in p.bullets)
+            for p in cv.projets
+        ),
+        "competences": "\n".join(
+            f"- {catalog.categories[g.categorie]} : "
+            + ", ".join(competences[i].label for i in g.skill_ids)
+            for g in selection.skill_groups
+        ),
+        "formation": "\n".join(
+            f"- {f.titre} ({f.dates}) — {f.etab}" for f in catalog.formation
+        ),
+        "experiences": "\n".join(
+            f"- {e.titre} ({e.dates}) — {e.etab}\n" + "\n".join(f"    {b}" for b in e.bullets)
+            for e in catalog.experiences
+        ),
+        "academique": "\n".join(
+            f"- {p.titre} ({p.dates})\n"
+            + "\n".join(f"    {p.bullets[i]}" for i in p.indices_defaut())
+            for p in catalog.projet_academique
+        ),
+        "langues": " ; ".join(catalog.langues),
+        "interets": ", ".join(catalog.centres_interet),
     }
 
     erreur: str | None = None
@@ -181,6 +235,8 @@ def build_draft(
         draft = provider.structured(prompt, LetterDraft, system=SYSTEM)
         violations = check_draft(draft, selection, catalog, analysis)
         if not violations:
+            mots = sum(len(getattr(draft, c).split()) for c in LetterDraft.model_fields)
+            LOGGER.info("Brouillon de LM accepté (%d mots)", mots)
             return draft
         erreur = " ; ".join(violations)
         if tentative == 1:
@@ -195,7 +251,6 @@ def fill_skeleton(
     aujourdhui: dt.date | None = None,
     skeleton_path: Path | None = None,
 ) -> str:
-    """Remplit le squelette. Les [À REMPLIR PAR MARCEL] restent tels quels."""
     texte = (skeleton_path or SKELETON_PATH).read_text(encoding="utf-8")
     texte = re.sub(r"<!--.*?-->\n?", "", texte, flags=re.DOTALL)
 
@@ -211,6 +266,8 @@ def fill_skeleton(
         "poste": analysis.intitule or "",
         "pourquoi_entreprise": draft.pourquoi_entreprise,
         "adequation_missions": draft.adequation_missions,
+        "motivation_personnelle": draft.motivation_personnelle,
+        "apport_parcours": draft.apport_parcours,
         "disponibilite_duree": catalog.disponibilite.duree,
         "disponibilite_debut": catalog.disponibilite.debut,
     }
@@ -225,4 +282,5 @@ def fill_skeleton(
 
 
 def remaining_placeholders(markdown: str) -> list[str]:
+    """Blocs [À REMPLIR PAR MARCEL] laissés dans un squelette personnalisé."""
     return PLACEHOLDER_RE.findall(markdown)

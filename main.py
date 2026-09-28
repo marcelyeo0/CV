@@ -18,7 +18,7 @@ from pathlib import Path
 
 from apply.analyze import analyze_offer
 from apply.ingest import IngestError, read_offer
-from apply.letter import build_draft, fill_skeleton, remaining_placeholders
+from apply.letter import LetterError, build_draft, fill_skeleton, remaining_placeholders
 from apply.llm import GeminiProvider, LLMError, LLMProvider
 from apply.select import build_selection
 from cvgen.catalog import SelectionError, load_catalog
@@ -132,8 +132,8 @@ def _resume(analysis: OfferAnalysis, selection: Selection, catalog: Catalog,
         print(f"\nATTENTION : {message}")
 
     print(f"\nDossier : {dossier}")
-    print("Relis selection.json et lm_draft.md, remplace les [À REMPLIR PAR MARCEL], puis :")
-    print(f"  python main.py render {dossier.relative_to(ROOT).as_posix()}")
+    print("Relis et corrige selection.json et lm_draft.md, puis rends les PDF :")
+    print(f'  python main.py render "{dossier.relative_to(ROOT).as_posix()}"')
     print()
 
 
@@ -148,7 +148,11 @@ def cmd_prepare(args: argparse.Namespace) -> int:
 
     provider = _provider()
 
-    analysis = analyze_offer(offre, provider)
+    try:
+        analysis = analyze_offer(offre, provider)
+    except LLMError as exc:
+        print(f"ERREUR d'analyse : {exc}", file=sys.stderr)
+        return 3
 
     avertissements: list[str] = []
     if analysis.langue != "fr":
@@ -159,7 +163,7 @@ def cmd_prepare(args: argparse.Namespace) -> int:
 
     try:
         selection = build_selection(analysis, catalog, provider)
-    except SelectionError as exc:
+    except (SelectionError, LLMError) as exc:
         print(f"ERREUR de sélection : {exc}", file=sys.stderr)
         return 3
 
@@ -174,7 +178,13 @@ def cmd_prepare(args: argparse.Namespace) -> int:
     _dump_json(dossier / "analysis.json", analysis)
     _dump_json(dossier / "selection.json", selection)
 
-    draft = build_draft(analysis, selection, catalog, provider)
+    try:
+        draft = build_draft(analysis, selection, catalog, provider)
+    except (LetterError, LLMError) as exc:
+        print(f"ERREUR de rédaction de la lettre : {exc}", file=sys.stderr)
+        print(f"Le CV reste générable : offre.txt, analysis.json et selection.json sont "
+              f"écrits dans {dossier}", file=sys.stderr)
+        return 4
     markdown = fill_skeleton(draft, analysis, catalog)
     (dossier / "lm_draft.md").write_text(markdown, encoding="utf-8")
 
@@ -184,6 +194,12 @@ def cmd_prepare(args: argparse.Namespace) -> int:
             f"{len(restants)} bloc(s) [À REMPLIR PAR MARCEL] dans lm_draft.md : le rendu de "
             "la lettre échouera tant qu'ils y sont."
         )
+    avertissements.append(
+        "Dans lm_draft.md, les paragraphes « motivation personnelle » (3e) et "
+        "« apport du parcours » (4e) sont des PROPOSITIONS : le LLM ne connaît pas tes "
+        "raisons réelles, il compose à partir du catalogue. Relis-les et réécris-les avant "
+        "d'envoyer — c'est ce que tu devras défendre en entretien."
+    )
 
     _resume(analysis, selection, catalog, dossier, avertissements)
     return 0
