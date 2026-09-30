@@ -21,6 +21,11 @@ disponibilite:
   debut: "à partir de mars 2027"
   gabarit_tagline: "Recherche d'un {duree} en {role} {debut}"
 
+# Statut actuel : bandeau du CV et phrase d'ouverture de la lettre.
+statut:
+  cv: "Élève ingénieur en informatique, 2e année · Spécialisation IA & Optimisation"
+  lm: "Actuellement en deuxième année d'école d'ingénieur en informatique à l'ISIMA, avec une spécialisation en intelligence artificielle et optimisation, je vous adresse ma candidature pour l'offre « {{ poste }} »."
+
 formation:
   - titre: "Diplôme d'Ingénieur en Informatique"
     dates: "2025 - En cours"

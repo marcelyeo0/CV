@@ -29,6 +29,8 @@ L'adresse postale n'apparaît pas dans la lettre : nom, e-mail et téléphone su
 
 Madame, Monsieur,
 
+{{ statut_lm }}
+
 {{ pourquoi_entreprise }}
 
 {{ adequation_missions }}

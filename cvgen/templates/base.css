@@ -35,6 +35,7 @@ body {
     line-height: 1.35;
     margin: 0 0 11px 0;
 }
+.header .statut { font-size: {{ (base_px * 1.0406)|round(2) }}px; margin: -5px 0 9px 0; opacity: .92; }
 .contact-row { font-size: {{ (base_px * 0.9593)|round(2) }}px; }
 .contact-row .sep { margin: 0 10px; opacity: .6; }
 

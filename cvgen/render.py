@@ -66,6 +66,7 @@ def _cv_context(selection: Selection, catalog: Catalog) -> dict[str, Any]:
     return {
         "contact": catalog.contact,
         "tagline": cv.tagline,
+        "statut": catalog.statut.cv,
         "skill_groups": [
             {"label": g.label, "ligne": g.ligne} for g in cv.skill_groups
         ],

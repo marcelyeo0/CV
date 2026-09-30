@@ -263,6 +263,7 @@ def fill_skeleton(
         "ville_expedition": VILLE_EXPEDITION,
         "date": _format_date(aujourdhui or dt.date.today()),
         "poste": analysis.intitule or "",
+        "statut_lm": catalog.statut.lm.replace("{{ poste }}", analysis.intitule or ""),
         "pourquoi_entreprise": draft.pourquoi_entreprise,
         "adequation_missions": draft.adequation_missions,
         "motivation_personnelle": draft.motivation_personnelle,

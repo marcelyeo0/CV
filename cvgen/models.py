@@ -41,6 +41,11 @@ class Disponibilite(_Base):
         return self.gabarit_tagline.format(duree=self.duree, role=role, debut=self.debut)
 
 
+class Statut(_Base):
+    cv: str
+    lm: str
+
+
 class Formation(_Base):
     titre: str
     dates: str
@@ -132,6 +137,7 @@ class SelectionDraft(_Base):
 class Catalog(_Base):
     contact: Contact
     disponibilite: Disponibilite
+    statut: Statut
     formation: list[Formation]
     experiences: list[Experience]
     projet_academique: list[Projet]
