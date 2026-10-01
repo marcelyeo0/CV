@@ -100,6 +100,14 @@ Centres d'intérêt : {interets}
    l'histoire du candidat au-delà de ces faits.
 4. `apport_parcours` : ce que la formation et les expériences listées apportent pour ce
    poste précis. Reste sur des faits vérifiables et leur conséquence concrète.
+
+Non-redondance : la lettre s'ouvre déjà par une phrase sur le statut du candidat
+(école d'ingénieur, année, spécialisation), ne la répète pas. Les paragraphes 1 et 2
+ont déjà cité des projets : les paragraphes 3 et 4 n'en reprennent aucun. Chaque
+expérience ou élément du parcours n'apparaît que dans UN seul paragraphe : le 3 prend
+un angle (ce qui attire dans le métier, à partir d'une expérience), le 4 un autre (ce
+que le candidat apporte, à partir d'une autre expérience). Pas de formule de
+récapitulation qui redit ce qui précède.
 {correction}"""
 
 RETRY_HEADER = """
