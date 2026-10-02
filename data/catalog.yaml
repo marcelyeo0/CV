@@ -131,6 +131,18 @@ projets:
       - "Structuration de corpus hétérogènes pour le contrôle automatisé de documents réglementaires."
     bullets_defaut: [0, 1, 2]
 
+  - id: connectome_drosophile
+    titre: "Simulation du Cerveau de la Drosophile – Connectome & Spiking Neural Network"
+    dates: "Octobre 2026"
+    tags: [simulation, spiking-neural-network, graphe, brian2, ml, scikit-learn, pandas, python, neurosciences]
+    bullets:
+      - "Simulation du cerveau entier de la drosophile à partir du connectome open source FlyWire (~139 000 neurones, ~50 M de synapses) : réseau de neurones à impulsions (leaky integrate-and-fire, Brian2), reproduction d'un modèle publié (Nature, 2024)."
+      - "Pipeline de données Python : ingestion des tables de connectivité, construction du graphe pondéré et signé par neurotransmetteur, expériences d'activation/inhibition de neurones sensoriels et analyse de la propagation jusqu'aux neurones moteurs."
+      - "Entraînement d'un classifieur (Scikit-Learn) prédisant le type cellulaire à partir de features de connectivité du graphe (degrés, embeddings spectraux), évalué par validation croisée."
+      # Variante courte, remplace les puces 0 et 1.
+      - "Simulation whole-brain de la drosophile (connectome FlyWire, ~139 000 neurones) par réseau de neurones à impulsions sous Brian2 : pipeline d'ingestion, construction du graphe synaptique et expériences d'activation/inhibition."
+    bullets_defaut: [0, 1, 2]
+
 # Libellés de catégories autorisés pour les groupes de compétences.
 categories:
   langages: "Langages"
