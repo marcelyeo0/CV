@@ -33,3 +33,20 @@ def test_extraction_propre(cv_pdf, pdftotext, catalog):
     assert catalog.contact.adresse_courte in texte
     for section in ("COMPETENCES", "FORMATION", "EXPERIENCE", "PROJETS MAJEURS", "LANGUES"):
         assert section in texte
+
+
+MAX_CHARS_PUCE_PROJET = 100
+
+
+def test_puces_projets_une_ligne(catalog):
+    for projet in catalog.projets:
+        for puce in projet.bullets:
+            assert len(puce) <= MAX_CHARS_PUCE_PROJET, f"{projet.id} : {len(puce)} car. — {puce}"
+
+
+def test_bike_fit_en_experience_antechronologique(catalog):
+    ids = [e.id for e in catalog.experiences]
+    assert ids == ["bike_fit", "gala_isima", "attijariwafa"]
+    assert "bike_fit" not in {p.id for p in catalog.projets}
+    for selection in catalog.selections_par_defaut.values():
+        assert len(selection.project_ids) == 3

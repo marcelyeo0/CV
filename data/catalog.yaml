@@ -27,7 +27,7 @@ statut:
   lm: "Actuellement en deuxième année d'école d'ingénieur en informatique à l'ISIMA, avec une spécialisation en intelligence artificielle et optimisation, je vous adresse ma candidature pour l'offre « {{ poste }} »."
 
 formation:
-  - titre: "Diplôme d'Ingénieur en Informatique"
+  - titre: "Diplôme d'Ingénieur en Informatique – Spécialité IA & Optimisation"
     dates: "2025 - En cours"
     etab: "ISIMA – Institut Supérieur d'Informatique, de Modélisation et de leurs Applications, Clermont-Ferrand"
   - titre: "Classes Préparatoires Scientifiques (MPSI/MP)"
@@ -37,14 +37,15 @@ formation:
     dates: "2021 - 2023"
     etab: "SMCI (Société Mathématique de Côte d'Ivoire), Côte d'Ivoire"
 
+# Ordre antéchronologique (le plus récent en premier).
 experiences:
-  - id: attijariwafa
-    titre: "Stage – Trading & Front Office"
-    dates: "Mai 2025 - Juin 2025"
-    etab: "Attijariwafa Securities West Africa | Côte d'Ivoire"
+  - id: bike_fit
+    titre: "Développeur Freelance – Bike Fit, Analyse Posturale par Computer Vision"
+    dates: "Juin 2026 - En cours"
+    etab: "Projet freelance B2B | Clermont-Ferrand"
     bullets:
-      - "Traitement et suivi des ordres de bourse, analyse des flux de transactions et reporting quotidien."
-      - "Participation à la relation clientèle institutionnelle et à l'organisation de l'Assemblée Générale des actionnaires."
+      - "Logiciel Python modulaire : pose (MediaPipe, OpenCV), angles articulaires, recommandations LLM (Gemini)."
+      - "Rapports PDF et interface desktop CustomTkinter, en test auprès de vélocistes professionnels."
   - id: gala_isima
     titre: "Trésorier – Association Gala ISIMA"
     dates: "Mars 2026 - Mars 2027"
@@ -52,30 +53,37 @@ experiences:
     bullets:
       - "Gestion budgétaire, suivi financier et construction des tableaux de bord de l'association (budget ~300 participants)."
       - "Coordination logistique et organisationnelle des événements, négociation et suivi contractuel des prestataires."
+  - id: attijariwafa
+    titre: "Stage – Trading & Front Office"
+    dates: "Mai 2025 - Juin 2025"
+    etab: "Attijariwafa Securities West Africa | Côte d'Ivoire"
+    bullets:
+      - "Traitement et suivi des ordres de bourse, analyse des flux de transactions et reporting quotidien."
+      - "Participation à la relation clientèle institutionnelle et à l'organisation de l'Assemblée Générale des actionnaires."
 
 # Rendu en paragraphe justifié (les puces sont recollées) pour rester identique
 # au CV actuel.
 projet_academique:
   - id: jeu_video_ia
-    titre: "Jeu Vidéo IA en C – Agent Reinforcement Learning (SDL2)"
+    titre: "Jeu Vidéo IA en C – Agent Reinforcement Learning (SDL2) – ~50 heures"
     dates: "Juin 2026"
     tags: [reinforcement-learning, c, sdl2, from-scratch]
     bullets:
-      - "Projet de fin d'année : développement d'un moteur de jeu en C (SDL2) intégrant un agent entraîné par policy gradient (algorithme REINFORCE)."
+      - "Développement d'un moteur de jeu en C (SDL2) intégrant un agent entraîné par policy gradient (algorithme REINFORCE)."
       - "Implémentation from scratch du pipeline d'entraînement : extraction de features d'état, politique softmax paramétrée et mise à jour des poids par descente de gradient, avec gestion bas-niveau de la mémoire."
     bullets_defaut: [0, 1]
 
+# Puces : UNE LIGNE chacune (<= 100 caractères, vérifié par les tests).
+# Le projet freelance Bike Fit figure dans `experiences`, pas ici.
 projets:
   - id: agent_mcp
     titre: "Agent IA Connecté – Protocole MCP"
     dates: "Août 2026 - En cours"
     tags: [llm, agent, mcp, langchain, sql, python, api]
     bullets:
-      - "Agent conversationnel Python connecté via le protocole MCP à des sources hétérogènes (SaaS)."
-      - "Traduction du langage naturel en appels d'outils structurés et génération automatisée de rapports d'insights."
-      - "Développement d'un serveur MCP exposant schémas de données et permissions d'accès."
-      # Variante longue (formulation déjà utilisée par Marcel), remplace la puce 0.
-      - "Agent conversationnel Python (LangChain) connecté via le protocole MCP à des sources hétérogènes (SQL, SaaS CRM/support)."
+      - "Agent Python (LangChain) relié via MCP à des sources hétérogènes (SQL, SaaS CRM/support)."
+      - "Traduction du langage naturel en appels d'outils et génération automatisée de rapports d'insights."
+      - "Serveur MCP exposant schémas de données et permissions d'accès."
     bullets_defaut: [0, 1, 2]
 
   - id: n8n_candidatures
@@ -83,23 +91,9 @@ projets:
     dates: "Juillet 2026"
     tags: [etl, automatisation, n8n, llm, gemini, api, google-sheets, docker, reporting]
     bullets:
-      - "Pipeline d'automatisation sous n8n (self-hosted) : ingestion d'offres (via API), normalisation, stockage et scoring de pertinence."
-      - "Génération de contenus personnalisés via LLM ; intégration Gmail API, logs d'audit et gestion d'erreurs."
-      # Puces 2-4 : même projet, angle data engineering / reporting.
-      - "Pipeline ETL end-to-end orchestré sous n8n (self-hosted) : ingestion via API, normalisation, déduplication et persistance structurée (Google Sheets API), puis scoring automatisé de pertinence."
-      - "Intégration d'une API LLM (Gemini) pour l'enrichissement sémantique des données, avec logs d'audit, gestion d'erreurs et reporting automatisé des indicateurs de suivi."
-      - "Ingestion des offres via l'API Apify, persistance via Google Sheets API et génération de contenus via Gemini Flash-Lite (prompt engineering), le tout conteneurisé sous Docker."
-    bullets_defaut: [0, 1]
-
-  - id: bike_fit
-    titre: "Bike Fit – Analyse Posturale par Computer Vision (Freelance)"
-    dates: "Juin 2026 - En cours"
-    tags: [computer-vision, opencv, mediapipe, llm, gemini, python, freelance, b2b]
-    bullets:
-      - "Logiciel Python modulaire : pipeline de pose (MediaPipe, OpenCV), extraction de landmarks et calcul d'angles articulaires, recommandations via LLM (Gemini) et rapports PDF."
-      - "En test auprès de vélocistes professionnels."
-      - "Interface desktop CustomTkinter."
-      - "Cas d'usage B2B identifié."
+      - "Pipeline ETL n8n self-hosted : ingestion d'offres via API Apify, normalisation, scoring."
+      - "Contenus personnalisés via LLM (Gemini Flash-Lite), intégration Gmail API, logs d'audit, Docker."
+      - "Déduplication, persistance Google Sheets API et reporting automatisé des indicateurs de suivi."
     bullets_defaut: [0, 1]
 
   - id: segmentation_acp
@@ -107,8 +101,8 @@ projets:
     dates: "Février 2026 - Avril 2026"
     tags: [acp, clustering, forecasting, power-bi, sql, python, retail]
     bullets:
-      - "Pipeline Python/SQL d'analyse produit : traitement des ventes, réduction dimensionnelle (ACP) et clustering hiérarchique (CAH) pour segmenter les points de vente."
-      - "Modélisation de prévisions à 3 mois et création d'un dashboard Power BI mesurant l'écart assortiment théorique vs distribution réelle."
+      - "Pipeline Python/SQL : ACP et clustering hiérarchique (CAH) pour segmenter les points de vente."
+      - "Prévisions à 3 mois et dashboard Power BI : assortiment théorique vs distribution réelle."
     bullets_defaut: [0, 1]
 
   - id: backtesting_quant
@@ -116,8 +110,8 @@ projets:
     dates: "Août 2025 - Décembre 2025"
     tags: [series-temporelles, finance, pandas, numpy, backtrader, statistiques]
     bullets:
-      - "Création d'un framework de backtesting (Pandas, NumPy, Backtrader) : traitement des données, stratégies momentum/mean-reversion, et validation walk-forward."
-      - "Évaluation de la robustesse et des risques (ratio de Sharpe, max drawdown) via tests statistiques."
+      - "Framework de backtesting (Pandas, NumPy, Backtrader) : momentum, mean-reversion, walk-forward."
+      - "Robustesse et risques évalués par tests statistiques (ratio de Sharpe, max drawdown)."
     bullets_defaut: [0, 1]
 
   - id: rag_conformite
@@ -125,22 +119,19 @@ projets:
     dates: "Mai 2025 - Juillet 2025"
     tags: [rag, llm, pgvector, postgresql, fastapi, nlp, conformite]
     bullets:
-      - "Pipeline RAG en Python pour l'analyse automatisée de documents réglementaires : chunking sémantique, indexation vectorielle (PostgreSQL/pgvector) et inférence LLM."
-      - "Détection d'anomalies avec justification par extraits sourcés pour garantir la traçabilité."
+      - "Pipeline RAG Python : chunking sémantique, indexation pgvector (PostgreSQL) et inférence LLM."
+      - "Détection d'anomalies réglementaires avec justification par extraits sourcés."
       - "Résultats exposés via API REST (FastAPI), évaluation de la pertinence du retrieval."
-      - "Structuration de corpus hétérogènes pour le contrôle automatisé de documents réglementaires."
     bullets_defaut: [0, 1, 2]
 
   - id: connectome_drosophile
-    titre: "Simulation du Cerveau de la Drosophile – Connectome & Spiking Neural Network"
+    titre: "Simulation du Cerveau de la Drosophile – Connectome & SNN"
     dates: "Octobre 2026"
     tags: [simulation, spiking-neural-network, graphe, brian2, ml, scikit-learn, pandas, python, neurosciences]
     bullets:
-      - "Simulation du cerveau entier de la drosophile à partir du connectome open source FlyWire (~139 000 neurones, ~50 M de synapses) : réseau de neurones à impulsions (leaky integrate-and-fire, Brian2), reproduction d'un modèle publié (Nature, 2024)."
-      - "Pipeline de données Python : ingestion des tables de connectivité, construction du graphe pondéré et signé par neurotransmetteur, expériences d'activation/inhibition de neurones sensoriels et analyse de la propagation jusqu'aux neurones moteurs."
-      - "Entraînement d'un classifieur (Scikit-Learn) prédisant le type cellulaire à partir de features de connectivité du graphe (degrés, embeddings spectraux), évalué par validation croisée."
-      # Variante courte, remplace les puces 0 et 1.
-      - "Simulation whole-brain de la drosophile (connectome FlyWire, ~139 000 neurones) par réseau de neurones à impulsions sous Brian2 : pipeline d'ingestion, construction du graphe synaptique et expériences d'activation/inhibition."
+      - "Simulation du cerveau de la drosophile (connectome FlyWire, ~139 000 neurones) sous Brian2."
+      - "Pipeline Python : graphe synaptique pondéré, expériences d'activation/inhibition de neurones."
+      - "Classifieur Scikit-Learn du type cellulaire à partir de features du graphe, validation croisée."
     bullets_defaut: [0, 1, 2]
 
 # Libellés de catégories autorisés pour les groupes de compétences.
@@ -162,56 +153,56 @@ categories:
 competences:
   - {id: python, label: "Python", groupe: python, categories: [langages, langages_requetage], tags: [python]}
   - {id: sql, label: "SQL", groupe: sql, categories: [langages], tags: [sql]}
-  - {id: sql_postgresql, label: "SQL (PostgreSQL)", groupe: sql, categories: [langages_requetage], tags: [sql, postgresql]}
+  - {id: sql_postgresql, label: "SQL", groupe: sql, categories: [langages_requetage], tags: [sql, postgresql]}
   - {id: java, label: "Java", groupe: java, categories: [langages, langages_requetage], tags: [java]}
-  - {id: javascript_react_next, label: "JavaScript (React, Next.js)", groupe: javascript, categories: [langages, langages_requetage], tags: [javascript, react, nextjs, web]}
+  - {id: javascript_react_next, label: "JavaScript, React, Next.js", groupe: javascript, categories: [langages, langages_requetage], tags: [javascript, react, nextjs, web]}
   - {id: c, label: "C", groupe: c, categories: [langages, langages_requetage], tags: [c]}
   - {id: cpp, label: "C++", groupe: cpp, categories: [langages, langages_requetage], tags: [cpp]}
 
-  - {id: stats_inferentielles, label: "statistiques inférentielles", groupe: stats_inferentielles, categories: [statistiques], tags: [statistiques]}
-  - {id: tests_hypotheses, label: "tests d'hypothèses", groupe: tests_hypotheses, categories: [statistiques], tags: [statistiques]}
+  - {id: stats_inferentielles, label: "Statistiques", groupe: stats_inferentielles, categories: [statistiques], tags: [statistiques]}
+  - {id: tests_hypotheses, label: "Tests d'hypothèses", groupe: tests_hypotheses, categories: [statistiques], tags: [statistiques]}
   - {id: acp, label: "ACP", groupe: acp, categories: [statistiques], tags: [acp, reduction-dimension]}
-  - {id: clustering, label: "clustering (k-means, CAH)", groupe: clustering, categories: [statistiques], tags: [clustering, kmeans, cah]}
-  - {id: regression, label: "régression", groupe: regression, categories: [statistiques], tags: [regression]}
+  - {id: clustering, label: "Clustering", groupe: clustering, categories: [statistiques], tags: [clustering, kmeans, cah]}
+  - {id: regression, label: "Régression", groupe: regression, categories: [statistiques], tags: [regression]}
 
   - {id: scikit_learn, label: "Scikit-Learn", groupe: scikit_learn, categories: [machine_learning], tags: [scikit-learn, ml]}
-  - {id: modelisation_predictive, label: "modélisation prédictive", groupe: modelisation_predictive, categories: [machine_learning], tags: [ml, prediction]}
-  - {id: series_temporelles, label: "séries temporelles", groupe: series_temporelles, categories: [machine_learning], tags: [series-temporelles, forecasting]}
-  - {id: validation_croisee, label: "validation croisée", groupe: validation_croisee, categories: [machine_learning], tags: [ml, evaluation]}
-  - {id: apprentissage_supervise, label: "apprentissage supervisé", groupe: apprentissage_supervise, categories: [machine_learning], tags: [ml]}
+  - {id: modelisation_predictive, label: "Modélisation prédictive", groupe: modelisation_predictive, categories: [machine_learning], tags: [ml, prediction]}
+  - {id: series_temporelles, label: "Séries temporelles", groupe: series_temporelles, categories: [machine_learning], tags: [series-temporelles, forecasting]}
+  - {id: validation_croisee, label: "Validation croisée", groupe: validation_croisee, categories: [machine_learning], tags: [ml, evaluation]}
+  - {id: apprentissage_supervise, label: "Apprentissage supervisé", groupe: apprentissage_supervise, categories: [machine_learning], tags: [ml]}
   - {id: reinforcement_learning, label: "Reinforcement Learning", groupe: reinforcement_learning, categories: [machine_learning], tags: [reinforcement-learning]}
-  - {id: evaluation_modeles, label: "évaluation de modèles", groupe: evaluation_modeles, categories: [machine_learning], tags: [ml, evaluation]}
+  - {id: evaluation_modeles, label: "Évaluation de modèles", groupe: evaluation_modeles, categories: [machine_learning], tags: [ml, evaluation]}
 
   - {id: rag, label: "RAG", groupe: rag, categories: [llm_nlp], tags: [rag, llm]}
   - {id: langchain, label: "LangChain", groupe: langchain, categories: [llm_nlp], tags: [langchain, llm]}
-  - {id: embeddings, label: "embeddings", groupe: embeddings, categories: [llm_nlp], tags: [embeddings, nlp]}
-  - {id: bases_vectorielles, label: "bases vectorielles (pgvector, ChromaDB)", groupe: bases_vectorielles, categories: [llm_nlp], tags: [pgvector, chromadb, vectordb]}
-  - {id: prompt_engineering, label: "prompt engineering", groupe: prompt_engineering, categories: [llm_nlp], tags: [prompt-engineering, llm]}
+  - {id: embeddings, label: "Embeddings", groupe: embeddings, categories: [llm_nlp], tags: [embeddings, nlp]}
+  - {id: bases_vectorielles, label: "Bases vectorielles", groupe: bases_vectorielles, categories: [llm_nlp], tags: [pgvector, chromadb, vectordb]}
+  - {id: prompt_engineering, label: "Prompt engineering", groupe: prompt_engineering, categories: [llm_nlp], tags: [prompt-engineering, llm]}
 
   - {id: opencv, label: "OpenCV", groupe: opencv, categories: [computer_vision], tags: [opencv, computer-vision]}
   - {id: mediapipe, label: "MediaPipe", groupe: mediapipe, categories: [computer_vision], tags: [mediapipe, computer-vision]}
-  - {id: pose_estimation, label: "détection et estimation de pose", groupe: pose_estimation, categories: [computer_vision], tags: [computer-vision, pose]}
+  - {id: pose_estimation, label: "Pose estimation", groupe: pose_estimation, categories: [computer_vision], tags: [computer-vision, pose]}
 
   - {id: pandas, label: "Pandas", groupe: pandas, categories: [analyse_donnees, data_engineering], tags: [pandas, python]}
   - {id: numpy, label: "NumPy", groupe: numpy, categories: [analyse_donnees, data_engineering], tags: [numpy, python]}
-  - {id: nettoyage_structuration, label: "nettoyage et structuration", groupe: nettoyage_structuration, categories: [analyse_donnees, data_engineering], tags: [data-cleaning]}
+  - {id: nettoyage_structuration, label: "Nettoyage de données", groupe: nettoyage_structuration, categories: [analyse_donnees, data_engineering], tags: [data-cleaning]}
   - {id: etl, label: "ETL", groupe: etl, categories: [analyse_donnees, data_engineering], tags: [etl, pipeline]}
-  - {id: donnees_heterogenes, label: "données hétérogènes", groupe: donnees_heterogenes, categories: [analyse_donnees, data_engineering], tags: [data]}
-  - {id: api_rest_fastapi, label: "API REST (FastAPI)", groupe: api_rest, categories: [data_engineering], tags: [fastapi, api, python]}
+  - {id: donnees_heterogenes, label: "Données hétérogènes", groupe: donnees_heterogenes, categories: [analyse_donnees, data_engineering], tags: [data]}
+  - {id: api_rest_fastapi, label: "FastAPI", groupe: api_rest, categories: [data_engineering], tags: [fastapi, api, python]}
   - {id: postgresql, label: "PostgreSQL", groupe: postgresql, categories: [data_engineering], tags: [postgresql, sql]}
   - {id: google_sheets_api, label: "Google Sheets API", groupe: google_sheets_api, categories: [data_engineering], tags: [google-sheets, api]}
 
   - {id: power_bi, label: "Power BI", groupe: power_bi, categories: [dataviz_reporting], tags: [power-bi, dataviz, bi]}
   - {id: matplotlib, label: "Matplotlib", groupe: matplotlib, categories: [dataviz_reporting], tags: [matplotlib, dataviz, python]}
-  - {id: tableaux_de_bord, label: "tableaux de bord", groupe: tableaux_de_bord, categories: [dataviz_reporting], tags: [dashboard, reporting]}
-  - {id: suivi_kpi, label: "suivi de KPI", groupe: suivi_kpi, categories: [dataviz_reporting], tags: [kpi, reporting]}
+  - {id: tableaux_de_bord, label: "Dashboards", groupe: tableaux_de_bord, categories: [dataviz_reporting], tags: [dashboard, reporting]}
+  - {id: suivi_kpi, label: "KPI", groupe: suivi_kpi, categories: [dataviz_reporting], tags: [kpi, reporting]}
   - {id: excel, label: "Excel", groupe: excel, categories: [dataviz_reporting, outils], tags: [excel]}
 
-  - {id: gcp, label: "Google Cloud Platform (APIs Gemini, Sheets, Gmail)", groupe: gcp, categories: [cloud_deploiement], tags: [gcp, cloud, gemini, api]}
+  - {id: gcp, label: "Cloud (GCP)", groupe: gcp, categories: [cloud_deploiement], tags: [gcp, cloud, gemini, api]}
   - {id: docker, label: "Docker", groupe: docker, categories: [cloud_deploiement, outils], tags: [docker, conteneurisation]}
-  - {id: deploiement_self_hosted, label: "déploiement self-hosted", groupe: self_hosted, categories: [cloud_deploiement], tags: [self-hosted, deploiement]}
-  - {id: conteneurisation_self_hosted, label: "conteneurisation et déploiement self-hosted", groupe: self_hosted, categories: [cloud_deploiement], tags: [self-hosted, docker, deploiement]}
-  - {id: auth_quotas_api, label: "gestion d'authentification et de quotas API", groupe: auth_quotas_api, categories: [cloud_deploiement], tags: [api, auth]}
+  - {id: deploiement_self_hosted, label: "Self-hosted", groupe: self_hosted, categories: [cloud_deploiement], tags: [self-hosted, deploiement]}
+  - {id: conteneurisation_self_hosted, label: "Self-hosted", groupe: self_hosted, categories: [cloud_deploiement], tags: [self-hosted, docker, deploiement]}
+  - {id: auth_quotas_api, label: "Auth API", groupe: auth_quotas_api, categories: [cloud_deploiement], tags: [api, auth]}
 
   - {id: git, label: "Git", groupe: git, categories: [outils], tags: [git, versioning]}
   - {id: linux, label: "Linux", groupe: linux, categories: [outils], tags: [linux]}
@@ -233,7 +224,7 @@ centres_interet:
 selections_par_defaut:
   data_analyst:
     role: "Data Analyst"
-    project_ids: [bike_fit, segmentation_acp, backtesting_quant]
+    project_ids: [segmentation_acp, backtesting_quant, n8n_candidatures]
     skill_groups:
       - categorie: langages_requetage
         skill_ids: [python, sql_postgresql, java, javascript_react_next, c, cpp]
@@ -253,7 +244,7 @@ selections_par_defaut:
 
   data_science_ia:
     role: "Data Science / AI Engineer"
-    project_ids: [agent_mcp, n8n_candidatures, bike_fit]
+    project_ids: [agent_mcp, n8n_candidatures, connectome_drosophile]
     skill_groups:
       - categorie: langages
         skill_ids: [python, sql, java, c, cpp]

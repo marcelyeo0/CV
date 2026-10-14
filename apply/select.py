@@ -60,7 +60,8 @@ PROMPT = """# Offre analysée
   formulations de la même chose (par exemple `sql` et `sql_postgresql`) ne peuvent pas
   cohabiter dans un même groupe.
 - `bullet_overrides` : facultatif. Reformulation d'une puce pour mieux coller au
-  vocabulaire de l'offre. Tu ne peux que réécrire : aucune technologie ni aucun chiffre
+  vocabulaire de l'offre. Une puce doit rester sur UNE seule ligne (100 caractères
+  maximum). Tu ne peux que réécrire : aucune technologie ni aucun chiffre
   qui ne figure pas déjà dans le catalogue. En cas de doute, ne reformule pas.
 - `justification` : 2 phrases maximum expliquant ce choix.
 - `missing_keywords` : les mots-clés de l'offre qui n'ont aucun équivalent dans le

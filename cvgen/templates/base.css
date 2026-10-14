@@ -24,9 +24,9 @@ body {
 }
 
 .header {
-    background: {{ navy }};
-    color: #ffffff;
-    padding: 24px 34px;
+    text-align: center;
+    color: #2b2b2b;
+    padding: 22px 34px 0 34px;
 }
 .header .name {
     font-size: {{ (base_px * 1.3415)|round(2) }}px;
@@ -34,6 +34,7 @@ body {
     letter-spacing: 0;
     line-height: 1.35;
     margin: 0 0 11px 0;
+    color: {{ navy }};
 }
 .header .statut { font-size: {{ (base_px * 1.0406)|round(2) }}px; margin: -5px 0 9px 0; opacity: .92; }
 .contact-row { font-size: {{ (base_px * 0.9593)|round(2) }}px; }
